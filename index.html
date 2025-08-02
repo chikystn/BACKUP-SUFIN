@@ -57,7 +57,7 @@
                     <div class="bg-green-100 p-4 rounded-xl border border-green-200">
                         <h3 class="text-sm font-medium text-green-700 mb-1">Pemasukan Bulanan</h3>
                         <!-- Elemen untuk menampilkan pemasukan (sekarang bisa diklik) -->
-                         <div id="income-display" class="cursor-pointer p-2 -m-2 rounded-lg hover:bg-green-200 transition-colors" title="Klik untuk mengubah">
+                        <div id="income-display" class="cursor-pointer p-2 -m-2 rounded-lg hover:bg-green-200 transition-colors" title="Klik untuk mengubah">
                             <p id="total-income-text" class="text-2xl font-bold text-green-800">Rp 0</p>
                         </div>
                         <!-- Elemen untuk mengedit pemasukan (tersembunyi) -->
@@ -72,7 +72,7 @@
                     </div>
                     <div class="bg-blue-100 p-4 rounded-xl border border-blue-200">
                         <h3 class="text-sm font-medium text-blue-700">Sisa Uang</h3>
-                        <p id="remaining-balance" class="text-2xl font-bold text-blue-800">Rp 1.000.000</p>
+                        <p id="remaining-balance" class="text-2xl font-bold text-blue-800">Rp 0</p>
                     </div>
                 </div>
 
@@ -147,7 +147,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- STATE MANAGEMENT ---
-            let monthlyIncome = JSON.parse(localStorage.getItem('monthlyIncome')) || 1000000;
+            // Load state from localStorage or set defaults to 0
+            let monthlyIncome = JSON.parse(localStorage.getItem('monthlyIncome')) || 0;
             let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
             // --- DOM ELEMENTS ---
@@ -309,7 +310,7 @@
             resetButton.addEventListener('click', () => {
                 if (confirm('PERINGATAN: Ini akan menghapus SEMUA data transaksi dan pemasukan Anda. Apakah Anda yakin ingin memulai bulan baru?')) {
                     transactions = [];
-                    monthlyIncome = 1000000; // Reset income to default
+                    monthlyIncome = 0; // Reset income to default 0
                     saveState();
                     updateUI();
                 }
@@ -318,7 +319,7 @@
             incomeDisplayEl.addEventListener('click', () => {
                 incomeDisplayEl.classList.add('hidden');
                 incomeEditEl.classList.remove('hidden');
-                incomeInputEl.value = monthlyIncome;
+                incomeInputEl.value = monthlyIncome > 0 ? monthlyIncome : '';
                 incomeInputEl.focus();
             });
 
