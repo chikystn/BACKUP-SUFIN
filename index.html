@@ -55,8 +55,19 @@
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-green-100 p-4 rounded-xl border border-green-200">
-                        <h3 class="text-sm font-medium text-green-700">Pemasukan Tetap</h3>
-                        <p id="total-income" class="text-2xl font-bold text-green-800">Rp 1.000.000</p>
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="text-sm font-medium text-green-700">Pemasukan Bulanan</h3>
+                            <button id="edit-income-btn" title="Ubah Pemasukan" class="text-green-600 hover:text-green-800 p-1 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V12h2.293z"/></svg>
+                            </button>
+                        </div>
+                        <div id="income-display">
+                            <p id="total-income-text" class="text-2xl font-bold text-green-800">Rp 1.000.000</p>
+                        </div>
+                        <div id="income-edit" class="hidden">
+                            <input type="number" id="income-input" class="w-full p-2 border border-green-300 rounded-md" placeholder="Masukkan jumlah...">
+                            <button id="save-income-btn" class="w-full bg-green-600 text-white text-sm font-bold mt-2 py-1.5 rounded-md hover:bg-green-700">Simpan</button>
+                        </div>
                     </div>
                     <div class="bg-red-100 p-4 rounded-xl border border-red-200">
                         <h3 class="text-sm font-medium text-red-700">Total Pengeluaran</h3>
@@ -138,9 +149,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const PENDAPATAN_BULANAN = 1000000;
+            // --- STATE MANAGEMENT ---
+            // Load state from localStorage or set defaults
+            let monthlyIncome = JSON.parse(localStorage.getItem('monthlyIncome')) || 1000000;
+            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
-            // DOM Elements
+            // --- DOM ELEMENTS ---
+            const totalIncomeTextEl = document.getElementById('total-income-text');
             const totalExpenseEl = document.getElementById('total-expense');
             const remainingBalanceEl = document.getElementById('remaining-balance');
             const budgetBarEl = document.getElementById('budget-bar');
@@ -151,34 +166,37 @@
             const transactionListContainer = document.getElementById('transaction-list-container');
             const emptyStateEl = document.getElementById('empty-state');
             const resetButton = document.getElementById('reset-button');
+            const editIncomeBtn = document.getElementById('edit-income-btn');
+            const incomeDisplayEl = document.getElementById('income-display');
+            const incomeEditEl = document.getElementById('income-edit');
+            const incomeInputEl = document.getElementById('income-input');
+            const saveIncomeBtn = document.getElementById('save-income-btn');
 
-            // Chart.js instance
+            // --- CHART INSTANCE ---
             let expenseChart;
-
-            // Load transactions from localStorage
-            let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
             // --- UTILITY FUNCTIONS ---
             const formatCurrency = (amount) => {
                 return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
             };
 
-            const saveTransactions = () => {
+            const saveState = () => {
                 localStorage.setItem('transactions', JSON.stringify(transactions));
+                localStorage.setItem('monthlyIncome', JSON.stringify(monthlyIncome));
             };
 
             // --- RENDER FUNCTIONS ---
             const renderSummary = () => {
                 const totalExpense = transactions.reduce((acc, t) => acc + t.amount, 0);
-                const remainingBalance = PENDAPATAN_BULANAN - totalExpense;
-                const expensePercentage = (totalExpense / PENDAPATAN_BULANAN) * 100;
+                const remainingBalance = monthlyIncome - totalExpense;
+                const expensePercentage = monthlyIncome > 0 ? (totalExpense / monthlyIncome) * 100 : 0;
 
+                totalIncomeTextEl.textContent = formatCurrency(monthlyIncome);
                 totalExpenseEl.textContent = formatCurrency(totalExpense);
                 remainingBalanceEl.textContent = formatCurrency(remainingBalance);
                 
                 budgetBarEl.style.width = `${Math.min(expensePercentage, 100)}%`;
                 
-                // Change bar color based on usage
                 budgetBarEl.classList.remove('bg-red-500', 'bg-yellow-500', 'from-blue-400', 'to-blue-600');
                 if (expensePercentage >= 90) {
                     budgetBarEl.classList.add('bg-red-500');
@@ -196,9 +214,7 @@
                     emptyStateEl.style.display = 'block';
                 } else {
                     emptyStateEl.style.display = 'none';
-                    // Sort transactions by date descending
                     const sortedTransactions = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
-
                     sortedTransactions.forEach(t => {
                         const transactionEl = document.createElement('div');
                         transactionEl.className = 'flex justify-between items-center p-3 rounded-lg even:bg-slate-50';
@@ -223,32 +239,20 @@
 
             const renderChart = () => {
                 const ctx = document.getElementById('expense-chart').getContext('2d');
-                
                 const categorySpending = transactions.reduce((acc, t) => {
                     acc[t.category] = (acc[t.category] || 0) + t.amount;
                     return acc;
                 }, {});
-
                 const labels = Object.keys(categorySpending);
                 const data = Object.values(categorySpending);
-                
-                const chartColors = [
-                    '#3b82f6', // blue-500
-                    '#ef4444', // red-500
-                    '#f59e0b', // amber-500
-                    '#8b5cf6', // violet-500
-                    '#10b981', // emerald-500
-                    '#64748b'  // slate-500
-                ];
+                const chartColors = ['#3b82f6', '#ef4444', '#f59e0b', '#8b5cf6', '#10b981', '#64748b'];
 
                 if (expenseChart) {
                     expenseChart.destroy();
                 }
-
                 if (transactions.length === 0) {
-                    return; // Don't draw chart if no data
+                    return;
                 }
-
                 expenseChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
@@ -267,12 +271,7 @@
                         plugins: {
                             legend: {
                                 position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    font: {
-                                        family: "'Inter', sans-serif"
-                                    }
-                                }
+                                labels: { padding: 15, font: { family: "'Inter', sans-serif" } }
                             }
                         }
                     }
@@ -291,22 +290,12 @@
                 const description = descriptionInput.value.trim();
                 const amount = parseFloat(amountInput.value);
                 const category = categoryInput.value;
-
                 if (!description || isNaN(amount) || amount <= 0) {
                     alert('Mohon isi semua data dengan benar.');
                     return;
                 }
-
-                const newTransaction = {
-                    id: Date.now(),
-                    description,
-                    amount,
-                    category,
-                    date: new Date().toISOString()
-                };
-
-                transactions.push(newTransaction);
-                saveTransactions();
+                transactions.push({ id: Date.now(), description, amount, category, date: new Date().toISOString() });
+                saveState();
                 updateUI();
                 form.reset();
             });
@@ -316,21 +305,42 @@
                     const id = parseInt(e.target.closest('.delete-btn').dataset.id);
                     if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
                         transactions = transactions.filter(t => t.id !== id);
-                        saveTransactions();
+                        saveState();
                         updateUI();
                     }
                 }
             });
 
             resetButton.addEventListener('click', () => {
-                if (confirm('PERINGATAN: Ini akan menghapus SEMUA data transaksi Anda. Apakah Anda yakin ingin memulai bulan baru?')) {
+                if (confirm('PERINGATAN: Ini akan menghapus SEMUA data transaksi dan pemasukan Anda. Apakah Anda yakin ingin memulai bulan baru?')) {
                     transactions = [];
-                    saveTransactions();
+                    monthlyIncome = 1000000; // Reset income to default
+                    saveState();
                     updateUI();
                 }
             });
+            
+            editIncomeBtn.addEventListener('click', () => {
+                incomeDisplayEl.classList.add('hidden');
+                incomeEditEl.classList.remove('hidden');
+                incomeInputEl.value = monthlyIncome;
+                incomeInputEl.focus();
+            });
 
-            // Initial Render
+            saveIncomeBtn.addEventListener('click', () => {
+                const newIncome = parseFloat(incomeInputEl.value);
+                if (!isNaN(newIncome) && newIncome >= 0) {
+                    monthlyIncome = newIncome;
+                    saveState();
+                    updateUI();
+                    incomeDisplayEl.classList.remove('hidden');
+                    incomeEditEl.classList.add('hidden');
+                } else {
+                    alert('Masukkan jumlah pemasukan yang valid.');
+                }
+            });
+
+            // --- INITIAL RENDER ---
             updateUI();
         });
     </script>
