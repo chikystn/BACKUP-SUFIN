@@ -44,7 +44,7 @@
         <!-- Header -->
         <header class="text-center mb-6">
             <h1 class="text-3xl md:text-4xl font-bold text-slate-900">Manajer Keuangan Pribadi</h1>
-            <p class="text-slate-500 mt-1">Kelola uang penghasilanmu dengan bijak!</p>
+            <p class="text-slate-500 mt-1">Kelola uang saku bulananmu dengan bijak!</p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -55,17 +55,13 @@
                 <!-- Summary Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-green-100 p-4 rounded-xl border border-green-200">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="text-sm font-medium text-green-700">Pemasukan Bulanan</h3>
-                            <button id="edit-income-btn" title="Ubah Pemasukan" class="text-green-600 hover:text-green-800 p-1 rounded-full">
-                                <!-- IKON PENSIL YANG DIPERBAIKI -->
-                                <img src="https://cdn-icons-png.flaticon.com/128/1159/1159633.png" alt="Ubah Pemasukan" class="w-4 h-4">
-                            </button>
-                        </div>
-                        <div id="income-display">
+                        <h3 class="text-sm font-medium text-green-700 mb-1">Pemasukan Bulanan</h3>
+                        <!-- Elemen untuk menampilkan pemasukan (sekarang bisa diklik) -->
+                        <div id="income-display" class="cursor-pointer p-2 -m-2 rounded-lg hover:bg-green-200 transition-colors" title="Klik untuk mengubah">
                             <p id="total-income-text" class="text-2xl font-bold text-green-800">Rp 1.000.000</p>
                         </div>
-                        <div id="income-edit" class="hidden">
+                        <!-- Elemen untuk mengedit pemasukan (tersembunyi) -->
+                        <div id="income-edit" class="hidden mt-1">
                             <input type="number" id="income-input" class="w-full p-2 border border-green-300 rounded-md" placeholder="Masukkan jumlah...">
                             <button id="save-income-btn" class="w-full bg-green-600 text-white text-sm font-bold mt-2 py-1.5 rounded-md hover:bg-green-700">Simpan</button>
                         </div>
@@ -151,7 +147,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- STATE MANAGEMENT ---
-            // Load state from localStorage or set defaults
             let monthlyIncome = JSON.parse(localStorage.getItem('monthlyIncome')) || 1000000;
             let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 
@@ -167,7 +162,6 @@
             const transactionListContainer = document.getElementById('transaction-list-container');
             const emptyStateEl = document.getElementById('empty-state');
             const resetButton = document.getElementById('reset-button');
-            const editIncomeBtn = document.getElementById('edit-income-btn');
             const incomeDisplayEl = document.getElementById('income-display');
             const incomeEditEl = document.getElementById('income-edit');
             const incomeInputEl = document.getElementById('income-input');
@@ -321,7 +315,7 @@
                 }
             });
             
-            editIncomeBtn.addEventListener('click', () => {
+            incomeDisplayEl.addEventListener('click', () => {
                 incomeDisplayEl.classList.add('hidden');
                 incomeEditEl.classList.remove('hidden');
                 incomeInputEl.value = monthlyIncome;
