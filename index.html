@@ -22,7 +22,7 @@
             --warning-color: #ffc107;
             --info-color: #17a2b8;
             --border-color: #dee2e6;
-            --shadow: 0 4px S6px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         body {
@@ -32,6 +32,7 @@
             margin: 0;
             padding: 20px;
             line-height: 1.6;
+            -webkit-text-size-adjust: 100%; /* Mencegah zoom otomatis font di mobile */
         }
 
         .container {
@@ -121,6 +122,7 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 5px;
+            word-break: break-all;
         }
 
         .card .amount.income { color: var(--success-color); }
@@ -275,10 +277,15 @@
         }
        
         /* Styling untuk Tabel */
+        .table-wrapper {
+            overflow-x: auto; /* Memungkinkan tabel di-scroll ke samping di layar kecil */
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            min-width: 600px; /* Lebar minimum agar tidak terlalu sempit */
         }
 
         th, td {
@@ -318,6 +325,7 @@
             font-size: inherit;
             color: inherit;
             width: 100%;
+            min-width: 100px; /* Agar input tidak terlalu kecil */
             padding: 4px;
             border-radius: 4px;
         }
@@ -378,6 +386,71 @@
         #reset-data-btn:hover {
             background-color: #c82333;
         }
+        
+        /* --- ATURAN RESPONSIVE --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 0 10px;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .month-navigation {
+                gap: 10px;
+            }
+            #current-month-display {
+                font-size: 1.2rem;
+                width: 150px;
+            }
+            .month-navigation button {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+            .card {
+                padding: 20px;
+            }
+            .card .amount {
+                font-size: 1.6rem;
+            }
+            .section {
+                padding: 20px;
+            }
+            .section h2 {
+                font-size: 1.5rem;
+            }
+            .strategic-fund-card {
+                padding: 20px;
+            }
+            .strategic-fund-card h3 {
+                font-size: 1.3rem;
+            }
+            .strategic-fund-card .total-fund {
+                font-size: 2rem;
+            }
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .dashboard {
+                gap: 15px;
+            }
+            .card .amount {
+                font-size: 1.4rem;
+            }
+            #current-month-display {
+                width: auto;
+                flex-grow: 1;
+            }
+        }
 
     </style>
 </head>
@@ -434,15 +507,17 @@
 
         <section class="section">
             <h2>Rincian Pemasukan & Dana Tersedia</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sumber Pemasukan</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="income-table-body"></tbody>
-                <tfoot id="income-table-foot"></tfoot>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sumber Pemasukan</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="income-table-body"></tbody>
+                    <tfoot id="income-table-foot"></tfoot>
+                </table>
+            </div>
             <button class="add-row-btn" id="add-income-btn">+ Tambah Pemasukan</button>
         </section>
 
@@ -451,15 +526,17 @@
              <div class="chart-container">
                 <canvas id="expenseChart"></canvas>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Kategori</th><th>Item</th><th>Anggaran</th><th>Catatan</th><th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="expense-table-body"></tbody>
-                <tfoot id="expense-table-foot"></tfoot>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori</th><th>Item</th><th>Anggaran</th><th>Catatan</th><th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expense-table-body"></tbody>
+                    <tfoot id="expense-table-foot"></tfoot>
+                </table>
+            </div>
             <button class="add-row-btn" id="add-expense-btn">+ Tambah Pengeluaran</button>
         </section>
 
@@ -593,28 +670,12 @@
             const sisaKas = totalPemasukanLikuid - totalPengeluaran;
             const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
 
-            // Logika baru untuk alokasi dinamis
-            let sisaKasSetelahAlokasi = sisaKas;
-            
-            // 1. Hitung alokasi persentase (jika ada)
-            data.alokasi.forEach(item => {
-                if (item.persentase) {
-                    item.jumlah = sisaKas * (item.persentase / 100);
-                    sisaKasSetelahAlokasi -= item.jumlah;
-                }
-            });
+            const fixedAllocations = data.alokasi.filter(item => item.nama !== 'Dana Kuliah');
+            const fixedAllocationsTotal = fixedAllocations.reduce((sum, item) => sum + item.jumlah, 0);
+            const danaKuliahAllocation = data.alokasi.find(item => item.nama === 'Dana Kuliah');
 
-            // 2. Kurangi alokasi tetap (yang bukan persentase & bukan prioritas utama)
-             data.alokasi.forEach(item => {
-                if (!item.persentase && item.nama !== 'Dana Kuliah') {
-                    sisaKasSetelahAlokasi -= item.jumlah;
-                }
-            });
-
-            // 3. Sisa terakhir masuk ke prioritas (misal: Dana Kuliah atau Dana Darurat jika tidak ada dana kuliah)
-            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah' || item.persentase === 100);
-            if (prioritasUtama && prioritasUtama.persentase !== 100) { // Hanya update jika bukan 100%
-                prioritasUtama.jumlah = Math.max(0, sisaKasSetelahAlokasi);
+            if (danaKuliahAllocation) {
+                danaKuliahAllocation.jumlah = Math.max(0, sisaKas - fixedAllocationsTotal);
             }
 
             data.dashboard = {
