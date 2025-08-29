@@ -656,31 +656,34 @@
             const sisaKas = totalPemasukanLikuid - totalPengeluaran;
             const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
 
-            // Logika baru untuk alokasi dinamis
-            let sisaKasSetelahAlokasi = sisaKas;
+            // PERBAIKAN: Logika alokasi dinamis sesuai prioritas
+            let sisaKasUntukDialokasikan = sisaKas;
             
-            // 1. Hitung alokasi persentase
+            // 1. Hitung dan alokasikan dana berbasis persentase
             data.alokasi.forEach(item => {
                 if (item.persentase) {
                     item.jumlah = sisaKas * (item.persentase / 100);
-                    sisaKasSetelahAlokasi -= item.jumlah;
+                    sisaKasUntukDialokasikan -= item.jumlah;
                 }
             });
 
-            // 2. Kurangi alokasi tetap (yang bukan persentase & bukan prioritas)
+            // 2. Alokasikan dana tetap (yang bukan persentase dan bukan prioritas utama)
              data.alokasi.forEach(item => {
-                const isPrioritas = item.nama === 'Dana Kuliah' || item.persentase === 100;
-                if (!item.persentase && !isPrioritas) {
-                    sisaKasSetelahAlokasi -= item.jumlah;
+                const isPrioritasUtama = item.nama === 'Dana Kuliah' || (item.persentase && item.persentase === 100);
+                if (!item.persentase && !isPrioritasUtama) {
+                    sisaKasUntukDialokasikan -= item.jumlah;
                 }
             });
 
-            // 3. Sisa terakhir masuk ke prioritas
-            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah' || (item.persentase && item.persentase === 100));
-            if (prioritasUtama && prioritasUtama.persentase !== 100) {
-                 prioritasUtama.jumlah = Math.max(0, sisaKasSetelahAlokasi);
+            // 3. Alokasikan sisa terakhir ke prioritas utama
+            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah');
+            if (prioritasUtama) {
+                 prioritasUtama.jumlah = Math.max(0, sisaKasUntukDialokasikan);
+            } else {
+                // Jika tidak ada 'Dana Kuliah', sisa masuk ke alokasi 100% (seperti Dana Darurat di bulan lain)
+                const alokasiSisa = data.alokasi.find(item => item.persentase === 100);
+                if(alokasiSisa) alokasiSisa.jumlah = Math.max(0, sisaKasUntukDialokasikan);
             }
-
 
             data.dashboard = {
                 pemasukan: totalPemasukanLikuid,
