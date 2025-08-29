@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peta Keuangan Interaktif (CRUD)</title>
+    <title>SUFIN|SUTAN-FINANCE</title>
     <!-- Library untuk membuat chart/grafik -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Impor font dari Google Fonts untuk tampilan yang lebih modern -->
@@ -363,6 +363,22 @@
             padding: 20px; color: var(--secondary-color);
             font-size: 0.9rem;
         }
+
+        #reset-data-btn {
+            margin-top: 15px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #reset-data-btn:hover {
+            background-color: #c82333;
+        }
+
     </style>
 </head>
 <body>
@@ -370,7 +386,7 @@
     <div class="container">
 
         <header>
-            <h1>Peta Keuangan</h1>
+            <h1>Manajemen Keuangan</h1>
         </header>
         
         <nav class="month-navigation">
@@ -453,13 +469,14 @@
         
         <footer>
             <p>Dengan struktur ini, keuangan stabil dan siap bertumbuh.</p>
+            <button id="reset-data-btn">Reset Semua Data</button>
         </footer>
 
     </div>
 
     <script>
-        // --- PUSAT DATA KEUANGAN ---
-        const financeData = {
+        // --- PUSAT DATA KEUANGAN (DEFAULT) ---
+        let financeData = {
             "2025-09": {
                 pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'likuid' }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'non-likuid' } ],
                 pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, catatan: 'Plafon Maksimal' } ],
@@ -487,6 +504,7 @@
         };
 
         // --- VARIABEL GLOBAL ---
+        const STORAGE_KEY = 'petaKeuanganData';
         let currentMonthIndex = 0;
         const availableMonths = Object.keys(financeData);
         const allocationCtx = document.getElementById('allocationChart').getContext('2d');
@@ -496,6 +514,10 @@
 
         // --- FUNGSI-FUNGSI ---
         
+        function saveDataToLocalStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(financeData));
+        }
+
         function formatCurrency(amount) {
             return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
         }
@@ -513,7 +535,6 @@
             const sisaKas = totalPemasukanLikuid - totalPengeluaran;
             const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
 
-            // Logika baru untuk alokasi dinamis
             const fixedAllocations = data.alokasi.filter(item => item.nama !== 'Dana Kuliah');
             const fixedAllocationsTotal = fixedAllocations.reduce((sum, item) => sum + item.jumlah, 0);
             const danaKuliahAllocation = data.alokasi.find(item => item.nama === 'Dana Kuliah');
@@ -550,7 +571,7 @@
             document.getElementById('rasio-tabungan-note').textContent = "Dari pemasukan yang berhasil disimpan.";
 
             renderAllocationDetails(data.alokasi);
-            renderStrategicFund(data); // Pass full data
+            renderStrategicFund(data);
             renderIncomeTable(data.pemasukan, dashboard.pemasukan);
             renderExpenseTable(data.pengeluaran, dashboard.pengeluaran);
             renderRencanaAksi(data.rencanaAksi);
@@ -599,7 +620,6 @@
             
             section.style.display = 'block';
             
-            // Bangun komponen secara dinamis
             const danaDariSisaKas = data.alokasi.find(item => item.nama === 'Dana Kuliah')?.jumlah || 0;
             const danaDariOrtu = data.pemasukan.find(item => item.sumber === 'Cicilan dari Orang Tua')?.jumlah || 0;
             
@@ -744,12 +764,15 @@
 
             if (target.classList.contains('editable-amount') && event.type === 'change') {
                 data[type][index][type === 'pemasukan' ? 'jumlah' : 'anggaran'] = parseCurrency(target.value);
+                saveDataToLocalStorage();
                 recalculateAndRender();
             } else if (target.hasAttribute('contenteditable') && event.type === 'blur') {
                  data[type][index][target.dataset.field] = target.textContent;
+                 saveDataToLocalStorage();
             } else if (target.classList.contains('delete-btn')) {
                 if (confirm('Anda yakin ingin menghapus baris ini?')) {
                     data[type].splice(index, 1);
+                    saveDataToLocalStorage();
                     recalculateAndRender();
                 }
             }
@@ -764,10 +787,12 @@
         });
         document.getElementById('add-income-btn').addEventListener('click', () => {
             financeData[availableMonths[currentMonthIndex]].pemasukan.push({ sumber: 'Sumber Baru', jumlah: 0, status: 'likuid' });
+            saveDataToLocalStorage();
             recalculateAndRender();
         });
         document.getElementById('add-expense-btn').addEventListener('click', () => {
             financeData[availableMonths[currentMonthIndex]].pengeluaran.push({ kategori: 'Kategori Baru', item: 'Item Baru', anggaran: 0, catatan: '-' });
+            saveDataToLocalStorage();
             recalculateAndRender();
         });
 
@@ -778,7 +803,18 @@
 
         // --- INISIALISASI ---
         document.addEventListener('DOMContentLoaded', () => {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                financeData = JSON.parse(savedData);
+            }
             recalculateAndRender();
+
+            document.getElementById('reset-data-btn').addEventListener('click', () => {
+                if (confirm('PERINGATAN: Aksi ini akan menghapus semua perubahan yang telah Anda simpan dan mengembalikan data ke kondisi awal. Lanjutkan?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    location.reload();
+                }
+            });
         });
     </script>
 
