@@ -476,7 +476,7 @@
 
     <script>
         // --- PUSAT DATA KEUANGAN (DEFAULT) ---
-        let financeData = {
+        const defaultFinanceData = {
             "2025-09": {
                 pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'likuid' }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'non-likuid' } ],
                 pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, catatan: 'Plafon Maksimal' } ],
@@ -494,19 +494,77 @@
             },
             "2025-10": {
                 pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Mulai rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' },  { kategori: 'Lain-lain', item: 'Cetak Kartu blu', anggaran: 50000, catatan: 'Sesuai rencana' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 100000, catatan: 'Buffer' } ],
-                alokasi: [ 
-                    { nama: 'Dana Darurat', jumlah: 500000, target: 2000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' }, 
-                    { nama: 'Investasi Tambahan', jumlah: 160000, target: 0, warna: '#28a745', ikon: '📈', deskripsi: 'Aset yang ditumbuhkan secara rutin setiap bulan.', strategi: 'Fokus pada konsistensi (DCA).' } 
-                ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Oktober', poin: ['Disiplin investasi rutin (DCA).', 'Jaga pengeluaran tak terduga.'] }, { judul: '📈 Target November', poin: ['Naikkan DCA menjadi Rp150k.'] } ]
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 150000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 200000, catatan: 'Buffer' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama Oktober', poin: ['Disiplin investasi rutin (DCA).', 'Jaga pengeluaran tak terduga.'] } ]
             },
+            "2025-11": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 150000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Transportasi', item: 'Servis Motor', anggaran: 150000, catatan: 'Ganti Oli' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama November', poin: ['Konsisten DCA.', 'Mulai rencanakan liburan akhir tahun.'] } ]
+            },
+            "2025-12": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Hiburan', item: 'Liburan Akhir Tahun', anggaran: 400000, catatan: 'Pulang Kampung' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎆 Selamat Tahun Baru!', poin: ['Evaluasi keuangan 2025.', 'Tetapkan target baru untuk 2026.'] } ]
+            },
+            "2026-01": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Naikkan Target' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama Januari', poin: ['Tingkatkan nominal DCA.', 'Cari peluang pemasukan tambahan.'] } ]
+            },
+            "2026-02": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Hasil Proyek Freelance', jumlah: 500000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'Bayar UKT Semester', anggaran: 1500000, catatan: 'Wajib' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama Februari', poin: ['Pastikan UKT terbayar lunas.', 'Alokasikan sisa dana freelance dengan bijak.'] } ]
+            },
+            "2026-03": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Bonus Lebaran Ortu', jumlah: 500000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Sosial', item: 'Belanja Lebaran', anggaran: 300000, catatan: 'Baju & Kue' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🕌 Selamat Idul Fitri!', poin: ['Manfaatkan bonus untuk menambah tabungan/investasi.'] } ]
+            },
+            "2026-04": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 200000, catatan: 'Buffer' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama April', poin: ['Kembali ke rutinitas setelah lebaran.', 'Jaga konsistensi menabung.'] } ]
+            },
+            "2026-05": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Transportasi', item: 'Servis Motor', anggaran: 250000, catatan: 'Servis besar' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama Mei', poin: ['Pastikan kendaraan dalam kondisi prima.'] } ]
+            },
+            "2026-06": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '🎯 Fokus Utama Juni', poin: ['Mulai persiapan untuk KKN dan semester akhir.'] } ]
+            },
+            "2026-07": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Dana KKN dari Ortu', jumlah: 1000000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Pendidikan', item: 'Kebutuhan KKN', anggaran: 1200000, catatan: 'Transport, program, dll' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Disesuaikan' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
+                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
+                rencanaAksi: [ { judul: '💪 Semangat KKN!', poin: ['Fokus pada program pengabdian.', 'Kelola dana KKN dengan efisien.'] } ]
+            },
+            "2026-08": {
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
+                pengeluaran: [ { kategori: 'Kewajiban', item: 'Bayar UKT Semester Akhir', anggaran: 1500000, catatan: 'Wajib' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Disesuaikan' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
+                alokasi: [ { nama: 'Sisa Kas', jumlah: 0, persentase: 100, target: 0, warna: '#17a2b8', ikon: '💰', deskripsi: 'Sisa dana setelah kewajiban besar terpenuhi.', strategi: 'Bisa dialihkan ke dana darurat atau investasi.' } ],
+                rencanaAksi: [ { judul: '🎓 Semester Akhir!', poin: ['Fokus menyelesaikan skripsi.', 'Rencanakan keuangan pasca-kampus.'] } ]
+            }
         };
+        let financeData; // Dideklarasikan ulang di bawah
 
         // --- VARIABEL GLOBAL ---
         const STORAGE_KEY = 'petaKeuanganData';
         let currentMonthIndex = 0;
-        const availableMonths = Object.keys(financeData);
+        let availableMonths;
         const allocationCtx = document.getElementById('allocationChart').getContext('2d');
         const expenseCtx = document.getElementById('expenseChart').getContext('2d');
         let allocationChart;
@@ -535,12 +593,28 @@
             const sisaKas = totalPemasukanLikuid - totalPengeluaran;
             const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
 
-            const fixedAllocations = data.alokasi.filter(item => item.nama !== 'Dana Kuliah');
-            const fixedAllocationsTotal = fixedAllocations.reduce((sum, item) => sum + item.jumlah, 0);
-            const danaKuliahAllocation = data.alokasi.find(item => item.nama === 'Dana Kuliah');
+            // Logika baru untuk alokasi dinamis
+            let sisaKasSetelahAlokasi = sisaKas;
+            
+            // 1. Hitung alokasi persentase (jika ada)
+            data.alokasi.forEach(item => {
+                if (item.persentase) {
+                    item.jumlah = sisaKas * (item.persentase / 100);
+                    sisaKasSetelahAlokasi -= item.jumlah;
+                }
+            });
 
-            if (danaKuliahAllocation) {
-                danaKuliahAllocation.jumlah = Math.max(0, sisaKas - fixedAllocationsTotal);
+            // 2. Kurangi alokasi tetap (yang bukan persentase & bukan prioritas utama)
+             data.alokasi.forEach(item => {
+                if (!item.persentase && item.nama !== 'Dana Kuliah') {
+                    sisaKasSetelahAlokasi -= item.jumlah;
+                }
+            });
+
+            // 3. Sisa terakhir masuk ke prioritas (misal: Dana Kuliah atau Dana Darurat jika tidak ada dana kuliah)
+            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah' || item.persentase === 100);
+            if (prioritasUtama && prioritasUtama.persentase !== 100) { // Hanya update jika bukan 100%
+                prioritasUtama.jumlah = Math.max(0, sisaKasSetelahAlokasi);
             }
 
             data.dashboard = {
@@ -701,6 +775,7 @@
 
         function renderRencanaAksi(rencanaData) {
             const container = document.getElementById('rencana-aksi-section');
+            if(!rencanaData) return;
             while (container.children.length > 1) {
                 container.removeChild(container.lastChild);
             }
@@ -806,12 +881,18 @@
             const savedData = localStorage.getItem(STORAGE_KEY);
             if (savedData) {
                 financeData = JSON.parse(savedData);
+            } else {
+                financeData = defaultFinanceData;
             }
+            availableMonths = Object.keys(financeData);
             recalculateAndRender();
 
             document.getElementById('reset-data-btn').addEventListener('click', () => {
                 if (confirm('PERINGATAN: Aksi ini akan menghapus semua perubahan yang telah Anda simpan dan mengembalikan data ke kondisi awal. Lanjutkan?')) {
                     localStorage.removeItem(STORAGE_KEY);
+                    financeData = defaultFinanceData;
+                    availableMonths = Object.keys(financeData);
+                    saveDataToLocalStorage();
                     location.reload();
                 }
             });
