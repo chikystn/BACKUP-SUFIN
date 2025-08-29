@@ -119,10 +119,10 @@
         }
 
         .card .amount {
-            font-size: clamp(1.5rem, 5vw, 2rem); /* Ukuran font nominal responsif */
+            font-size: clamp(1.2rem, 5vw, 1.8rem); /* PERBAIKAN: Ukuran font lebih adaptif untuk mencegah teks terpotong */
             font-weight: 700;
             margin-bottom: 5px;
-            word-break: break-word; /* Lebih baik dari break-all */
+            word-wrap: break-word; /* Mencegah overflow jika nominal sangat panjang */
         }
 
         .card .amount.income { color: var(--success-color); }
@@ -199,7 +199,11 @@
             color: var(--text-color);
             font-weight: 700;
         }
-
+        .allocation-card .note-persen {
+            font-size: 0.8rem;
+            font-style: italic;
+            color: var(--secondary-color);
+        }
         .progress-bar-container {
             background-color: #e9ecef;
             border-radius: 50px;
@@ -285,13 +289,15 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            min-width: 600px; /* Lebar minimum agar tidak terlalu sempit */
+            min-width: 600px; /* PERBAIKAN: Mencegah kolom tabel menjadi terlalu sempit dan memaksa scroll horizontal */
         }
 
         th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
+            word-break: break-word;
+            hyphens: auto;
         }
 
         td[contenteditable="true"] {
@@ -306,6 +312,7 @@
         th {
             background-color: #f8f9fa;
             font-weight: 600;
+            white-space: nowrap; /* Mencegah judul kolom turun baris */
         }
 
         tbody tr:last-child td {
@@ -355,6 +362,7 @@
             padding: 4px 8px; border-radius: 6px;
             font-weight: 600; font-size: 0.8rem;
             display: inline-block;
+            white-space: nowrap;
         }
         .status.likuid { background-color: #d4edda; color: #155724; }
         .status.non-likuid { background-color: #fff3cd; color: #856404; }
@@ -536,9 +544,9 @@
                 pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'likuid' }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'non-likuid' } ],
                 pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, catatan: 'Plafon Maksimal' } ],
                 alokasi: [ 
-                    { nama: 'Dana Kuliah', jumlah: 600000, target: 0, warna: '#007bff', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini untuk tujuan strategis.', strategi: 'Disimpan di rekening terpisah (Blu) agar tidak terpakai.' },
+                    { nama: 'Dana Kuliah', jumlah: 0, target: 0, warna: '#007bff', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini untuk tujuan strategis.', strategi: 'Disimpan di rekening terpisah (Blu) agar tidak terpakai.' },
                     { nama: 'Investasi (RDPU)', jumlah: 200000, target: 0, warna: '#28a745', ikon: '📈', deskripsi: 'Untuk pertumbuhan aset jangka panjang.', strategi: 'Bisa dicairkan dalam 1-2 hari jika darurat.' }, 
-                    { nama: 'Buffer Cash', jumlah: 40000, target: 0, warna: '#ffc107', ikon: '🛡️', deskripsi: 'Dana darurat mikro untuk kebutuhan kecil.', strategi: 'Simpan tunai atau di e-wallet.' } 
+                    { nama: 'Buffer Cash', jumlah: 0, persentase: 10, target: 0, warna: '#ffc107', ikon: '🛡️', deskripsi: 'Dana darurat mikro untuk kebutuhan kecil.', strategi: 'Simpan tunai atau di e-wallet.' } 
                 ],
                 danaStrategis: {
                     judul: "Dana Siaga Pembayaran Kuliah",
@@ -648,13 +656,31 @@
             const sisaKas = totalPemasukanLikuid - totalPengeluaran;
             const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
 
-            const fixedAllocations = data.alokasi.filter(item => item.nama !== 'Dana Kuliah');
-            const fixedAllocationsTotal = fixedAllocations.reduce((sum, item) => sum + item.jumlah, 0);
-            const danaKuliahAllocation = data.alokasi.find(item => item.nama === 'Dana Kuliah');
+            // Logika baru untuk alokasi dinamis
+            let sisaKasSetelahAlokasi = sisaKas;
+            
+            // 1. Hitung alokasi persentase
+            data.alokasi.forEach(item => {
+                if (item.persentase) {
+                    item.jumlah = sisaKas * (item.persentase / 100);
+                    sisaKasSetelahAlokasi -= item.jumlah;
+                }
+            });
 
-            if (danaKuliahAllocation) {
-                danaKuliahAllocation.jumlah = Math.max(0, sisaKas - fixedAllocationsTotal);
+            // 2. Kurangi alokasi tetap (yang bukan persentase & bukan prioritas)
+             data.alokasi.forEach(item => {
+                const isPrioritas = item.nama === 'Dana Kuliah' || item.persentase === 100;
+                if (!item.persentase && !isPrioritas) {
+                    sisaKasSetelahAlokasi -= item.jumlah;
+                }
+            });
+
+            // 3. Sisa terakhir masuk ke prioritas
+            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah' || (item.persentase && item.persentase === 100));
+            if (prioritasUtama && prioritasUtama.persentase !== 100) {
+                 prioritasUtama.jumlah = Math.max(0, sisaKasSetelahAlokasi);
             }
+
 
             data.dashboard = {
                 pemasukan: totalPemasukanLikuid,
@@ -709,10 +735,12 @@
                         </div>
                     `;
                 }
+                const persenNote = item.persentase ? `<div class="note-persen">(${item.persentase}% dari Sisa Kas)</div>` : '';
                 const cardHTML = `
                     <div class="allocation-card">
                         <h3>${item.ikon} ${item.nama}</h3>
                         <div class="amount">${formatCurrency(item.jumlah)}</div>
+                        ${persenNote}
                         ${progressHTML}
                         <p><strong>Tujuan:</strong> ${item.deskripsi}</p>
                         <p><strong>Strategi:</strong> ${item.strategi}</p>
@@ -875,21 +903,28 @@
             const data = financeData[monthKey];
             const type = target.dataset.type;
             const index = parseInt(target.dataset.index, 10);
+            
+            let needsRecalculate = false;
+            let needsSave = false;
 
             if (target.classList.contains('editable-amount') && event.type === 'change') {
-                data[type][index][type === 'pemasukan' ? 'jumlah' : 'anggaran'] = parseCurrency(target.value);
-                saveDataToLocalStorage();
-                recalculateAndRender();
+                const field = type === 'pemasukan' ? 'jumlah' : 'anggaran';
+                data[type][index][field] = parseCurrency(target.value);
+                needsRecalculate = true;
+                needsSave = true;
             } else if (target.hasAttribute('contenteditable') && event.type === 'blur') {
                  data[type][index][target.dataset.field] = target.textContent;
-                 saveDataToLocalStorage();
+                 needsSave = true;
             } else if (target.classList.contains('delete-btn')) {
                 if (confirm('Anda yakin ingin menghapus baris ini?')) {
                     data[type].splice(index, 1);
-                    saveDataToLocalStorage();
-                    recalculateAndRender();
+                    needsRecalculate = true;
+                    needsSave = true;
                 }
             }
+
+            if(needsSave) saveDataToLocalStorage();
+            if(needsRecalculate) recalculateAndRender();
         }
 
         // --- EVENT LISTENERS ---
