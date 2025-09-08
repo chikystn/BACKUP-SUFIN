@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -49,7 +50,7 @@
         }
 
         header h1 {
-            font-size: clamp(2rem, 8vw, 2.5rem);
+            font-size: clamp(1.8rem, 8vw, 2.5rem);
             font-weight: 700;
             color: var(--text-color);
             margin-bottom: 0;
@@ -61,6 +62,7 @@
             align-items: center;
             margin-bottom: 40px;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .month-navigation button {
@@ -96,6 +98,7 @@
             color: var(--text-color);
             width: 220px;
             text-align: center;
+            flex-shrink: 0;
         }
 
         .dashboard {
@@ -174,7 +177,7 @@
             border-top: 1px solid var(--border-color);
         }
         .allocation-card {
-            background-color: #374151; /* Lebih gelap dari card utama */
+            background-color: #374151;
             border-radius: 10px;
             padding: 20px;
             border: 1px solid var(--border-color);
@@ -209,7 +212,7 @@
             color: var(--secondary-color);
         }
         .progress-bar-container {
-            background-color: #4b5563; /* Latar progress bar gelap */
+            background-color: #4b5563;
             border-radius: 50px;
             height: 12px;
             width: 100%;
@@ -232,7 +235,7 @@
         }
 
         .strategic-fund-card {
-            background-color: rgba(59, 130, 246, 0.1); /* Latar biru transparan */
+            background-color: rgba(59, 130, 246, 0.1);
             border: 2px solid var(--primary-color);
             border-radius: 12px;
             padding: 25px;
@@ -285,6 +288,19 @@
         
         .table-wrapper {
             overflow-x: auto;
+            position: relative;
+        }
+
+        .table-wrapper.is-scrollable::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 30px;
+            pointer-events: none;
+            background: linear-gradient(to right, transparent, var(--card-bg));
+            transition: opacity 0.2s;
         }
 
         table {
@@ -297,16 +313,23 @@
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
             word-wrap: break-word;
             hyphens: auto;
             vertical-align: top;
         }
+        
+        td:first-child, th:first-child,
+        td[data-field="catatan"] {
+             white-space: normal;
+        }
 
-        td[contenteditable="true"], [contenteditable="true"] {
+        [contenteditable="true"] {
             cursor: text;
             background-color: #374151;
+            white-space: normal;
         }
-        td[contenteditable="true"]:focus, [contenteditable="true"]:focus {
+        [contenteditable="true"]:focus {
             background-color: #4b5563;
             outline: 2px solid var(--primary-color);
             border-radius: 4px;
@@ -435,12 +458,18 @@
             #current-month-display { width: 150px; }
             .month-navigation button { padding: 8px 12px; font-size: 0.9rem; }
             .card, .section, .strategic-fund-card { padding: 20px; }
-            th, td { padding: 10px 8px; font-size: 0.9rem; }
+            th, td { padding: 10px 8px; font-size: 0.85rem; }
         }
 
         @media (max-width: 480px) {
+            body { padding: 5px; }
+            .container { padding: 0 5px; }
             .dashboard { gap: 15px; }
-            #current-month-display { width: auto; flex-grow: 1; }
+            #current-month-display { width: 100%; order: -1; margin-bottom: 10px; }
+            .card, .section, .strategic-fund-card { padding: 15px; }
+            .section h2 { font-size: 1.3rem; }
+            .card .amount { font-size: 1.4rem; }
+            .editable-amount { min-width: 80px; }
         }
 
     </style>
@@ -605,7 +634,7 @@
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
             
-            const totalPemasukanLiquid = data.pemasukan.reduce((sum, item) => item.status === 'liquid' ? sum + item.jumlah : sum, 0);
+            const totalPemasukanLiquid = data.pemasukan.reduce((sum, item) => item.status.toLowerCase() === 'liquid' ? sum + item.jumlah : sum, 0);
             const totalPengeluaran = data.pengeluaran.reduce((sum, item) => sum + item.anggaran, 0);
             const totalRealisasi = data.pengeluaran.reduce((sum, item) => sum + (item.aktual || 0), 0);
             const sisaKas = totalPemasukanLiquid - totalPengeluaran;
@@ -672,6 +701,8 @@
             
             document.getElementById('prev-month-btn').disabled = (currentMonthIndex === 0);
             document.getElementById('next-month-btn').disabled = (currentMonthIndex === availableMonths.length - 1);
+            
+            checkTableOverflow();
         }
 
         function renderAllocationDetails(alokasiData) {
@@ -760,7 +791,7 @@
             pemasukanData.forEach((item, index) => {
                 const statusOptions = ['liquid', 'illiquid', 'none'];
                 const optionsHTML = statusOptions.map(opt =>
-                    `<option value="${opt}" ${item.status === opt ? 'selected' : ''}>${opt.charAt(0).toUpperCase() + opt.slice(1)}</option>`
+                    `<option value="${opt}" ${item.status && item.status.toLowerCase() === opt ? 'selected' : ''}>${opt.charAt(0).toUpperCase() + opt.slice(1)}</option>`
                 ).join('');
 
                 const row = `
@@ -883,6 +914,17 @@
                 }
             });
         }
+
+        function checkTableOverflow() {
+            const wrappers = document.querySelectorAll('.table-wrapper');
+            wrappers.forEach(wrapper => {
+                if (wrapper.scrollWidth > wrapper.clientWidth) {
+                    wrapper.classList.add('is-scrollable');
+                } else {
+                    wrapper.classList.remove('is-scrollable');
+                }
+            });
+        }
         
         function handleContentAction(event) {
             const target = event.target;
@@ -910,11 +952,15 @@
                 needsSave = true;
             } else if (target.hasAttribute('contenteditable') && event.type === 'blur') {
                 const field = target.dataset.field;
+                
                 if (dataType === 'danaStrategis') {
                     data[dataType][field] = target.textContent;
                     needsSave = true;
-                } 
-                else if (dataType === 'rencanaAksi') { 
+                } else if (dataType === 'alokasi') {
+                    const index = parseInt(target.dataset.index, 10);
+                    data[dataType][index][field] = target.textContent;
+                    needsSave = true;
+                } else if (dataType === 'rencanaAksi') { 
                     const index = parseInt(target.dataset.index, 10);
                     const pointIndex = target.dataset.pointIndex; 
 
@@ -925,7 +971,7 @@
                     }
                     needsSave = true;
                 } 
-                else {
+                else { // Handles 'pemasukan' and 'pengeluaran' text fields
                     const index = parseInt(target.dataset.index, 10);
                     data[dataType][index][field] = target.textContent;
                     needsSave = true;
@@ -1006,6 +1052,8 @@
             Chart.defaults.borderColor = '#374151';
 
             recalculateAndRender();
+
+            window.addEventListener('resize', checkTableOverflow);
 
             document.getElementById('reset-data-btn').addEventListener('click', () => {
                 if (confirm('PERINGATAN: Aksi ini akan menghapus semua perubahan yang telah Anda simpan dan mengembalikan data ke kondisi awal. Lanjutkan?')) {
