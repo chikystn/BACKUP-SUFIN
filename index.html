@@ -10,19 +10,19 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-        /* Pengaturan variabel warna untuk konsistensi desain */
+        /* PERUBAHAN: Skema Warna Dark Mode Finansial */
         :root {
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #212529;
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --border-color: #dee2e6;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --bg-color: #111827; /* Abu-abu tua kebiruan */
+            --card-bg: #1f2937; /* Sedikit lebih terang */
+            --text-color: #f3f4f6; /* Putih Gading */
+            --primary-color: #3b82f6; /* Biru cerah */
+            --secondary-color: #9ca3af; /* Abu-abu terang untuk teks sekunder */
+            --success-color: #10b981; /* Hijau Emerald */
+            --danger-color: #ef4444; /* Merah Terang */
+            --warning-color: #f59e0b; /* Kuning Amber */
+            --info-color: #38bdf8; /* Biru Langit */
+            --border-color: #374151; /* Batas abu-abu gelap */
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
         }
 
         body {
@@ -32,7 +32,7 @@
             margin: 0;
             padding: 20px;
             line-height: 1.6;
-            -webkit-text-size-adjust: 100%; /* Mencegah zoom otomatis font di mobile */
+            -webkit-text-size-adjust: 100%;
         }
 
         .container {
@@ -41,20 +41,20 @@
             padding: 0 15px;
         }
 
-        /* Styling untuk Header */
         header {
+            display: flex;
+            justify-content: center;
             text-align: center;
             margin-bottom: 20px;
         }
 
         header h1 {
-            font-size: clamp(2rem, 8vw, 2.5rem); /* Ukuran font responsif */
+            font-size: clamp(2rem, 8vw, 2.5rem);
             font-weight: 700;
             color: var(--text-color);
             margin-bottom: 0;
         }
 
-        /* Navigasi Bulan */
         .month-navigation {
             display: flex;
             justify-content: center;
@@ -75,28 +75,32 @@
             transition: background-color 0.2s ease;
         }
 
+        .month-navigation button#add-month-btn {
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
         .month-navigation button:hover {
-            background-color: #0056b3;
+            background-color: #2563eb;
         }
         
         .month-navigation button:disabled {
-            background-color: #c0c0c0;
+            background-color: #4b5563;
             cursor: not-allowed;
         }
 
         #current-month-display {
-            font-size: clamp(1.2rem, 5vw, 1.5rem); /* Ukuran font responsif */
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
             font-weight: 700;
             color: var(--text-color);
             width: 220px;
             text-align: center;
         }
 
-
-        /* Styling untuk Dashboard Ringkasan */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Sedikit lebih lebar */
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
             margin-bottom: 40px;
         }
@@ -119,10 +123,10 @@
         }
 
         .card .amount {
-            font-size: clamp(1.2rem, 5vw, 1.8rem); /* PERBAIKAN: Ukuran font lebih adaptif untuk mencegah teks terpotong */
+            font-size: clamp(1.2rem, 5vw, 1.8rem);
             font-weight: 700;
             margin-bottom: 5px;
-            word-wrap: break-word; /* Mencegah overflow jika nominal sangat panjang */
+            word-wrap: break-word;
         }
 
         .card .amount.income { color: var(--success-color); }
@@ -134,8 +138,10 @@
             color: var(--secondary-color);
             margin-top: auto;
         }
+        .card .note strong {
+             color: var(--text-color);
+        }
 
-        /* Styling untuk setiap seksi konten */
         .section {
             background-color: var(--card-bg);
             padding: 30px;
@@ -146,21 +152,19 @@
         }
 
         .section h2 {
-            font-size: clamp(1.5rem, 6vw, 1.8rem); /* Ukuran font responsif */
+            font-size: clamp(1.5rem, 6vw, 1.8rem);
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--border-color);
             margin-bottom: 20px;
         }
 
-        /* Styling untuk wadah grafik */
         .chart-container {
             position: relative;
             max-width: 450px;
             margin: 20px auto;
         }
 
-        /* Styling Detail Alokasi & Progress Bar */
         .allocation-details {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -170,7 +174,7 @@
             border-top: 1px solid var(--border-color);
         }
         .allocation-card {
-            background-color: #f8f9fa;
+            background-color: #374151; /* Lebih gelap dari card utama */
             border-radius: 10px;
             padding: 20px;
             border: 1px solid var(--border-color);
@@ -205,7 +209,7 @@
             color: var(--secondary-color);
         }
         .progress-bar-container {
-            background-color: #e9ecef;
+            background-color: #4b5563; /* Latar progress bar gelap */
             border-radius: 50px;
             height: 12px;
             width: 100%;
@@ -227,9 +231,8 @@
             color: var(--text-color);
         }
 
-        /* --- STYLING BARU: DANA STRATEGIS --- */
         .strategic-fund-card {
-            background-color: #eef7ff;
+            background-color: rgba(59, 130, 246, 0.1); /* Latar biru transparan */
             border: 2px solid var(--primary-color);
             border-radius: 12px;
             padding: 25px;
@@ -254,7 +257,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #cce5ff;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
         }
         .strategic-fund-card .component-item:last-child {
             border-bottom: none;
@@ -272,7 +275,7 @@
             font-size: 1.1rem;
         }
         .strategic-fund-card .summary {
-            background-color: #cce5ff;
+            background-color: rgba(59, 130, 246, 0.2);
             border-radius: 8px;
             padding: 15px;
             text-align: center;
@@ -280,39 +283,37 @@
             margin-top: 20px;
         }
        
-        /* Styling untuk Tabel */
         .table-wrapper {
-            overflow-x: auto; /* Memungkinkan tabel di-scroll ke samping di layar kecil */
+            overflow-x: auto;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            min-width: 600px; /* PERBAIKAN: Mencegah kolom tabel menjadi terlalu sempit dan memaksa scroll horizontal */
         }
 
         th, td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid var(--border-color);
-            word-break: break-word;
+            word-wrap: break-word;
             hyphens: auto;
+            vertical-align: top;
         }
 
         td[contenteditable="true"] {
             cursor: text;
-            background-color: #fefce8;
+            background-color: #374151;
         }
         td[contenteditable="true"]:focus {
-            background-color: #e7f1ff;
+            background-color: #4b5563;
             outline: 2px solid var(--primary-color);
         }
         
         th {
-            background-color: #f8f9fa;
+            background-color: #374151;
             font-weight: 600;
-            white-space: nowrap; /* Mencegah judul kolom turun baris */
         }
 
         tbody tr:last-child td {
@@ -322,24 +323,24 @@
         tfoot td {
             font-weight: 700;
             font-size: 1.1rem;
-            background-color: #f8f9fa;
+            background-color: #374151;
         }
 
         .editable-amount {
             border: 1px solid transparent;
-            background-color: #fefce8;
+            background-color: #374151;
             font-family: inherit;
             font-size: inherit;
             color: inherit;
             width: 100%;
-            min-width: 100px; /* Agar input tidak terlalu kecil */
+            min-width: 100px;
             padding: 4px;
             border-radius: 4px;
         }
         .editable-amount:focus {
             outline: none;
             border-color: var(--primary-color);
-            background-color: #e7f1ff;
+            background-color: #4b5563;
         }
 
         .delete-btn {
@@ -347,26 +348,39 @@
             color: var(--danger-color);
             cursor: pointer; font-size: 1.2rem;
         }
-        .delete-btn:hover { background-color: #fbebee; border-radius: 50%; }
+        .delete-btn:hover { background-color: rgba(239, 68, 68, 0.1); border-radius: 50%; }
 
         .add-row-btn {
             background-color: var(--success-color);
             color: white; border: none;
             padding: 8px 15px; border-radius: 8px;
-            font-size: 0.9rem; font-weight: 600;
-            cursor: pointer; margin-top: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
         }
-        .add-row-btn:hover { background-color: #218838; }
+        .add-row-btn:hover { background-color: #059669; }
 
         .status {
-            padding: 4px 8px; border-radius: 6px;
-            font-weight: 600; font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
             display: inline-block;
             white-space: nowrap;
         }
-        .status.likuid { background-color: #d4edda; color: #155724; }
-        .status.non-likuid { background-color: #fff3cd; color: #856404; }
+        .status.liquid { background-color: rgba(16, 185, 129, 0.2); color: #a7f3d0; }
+        .status.illiquid { background-color: rgba(245, 158, 11, 0.2); color: #fde68a; }
         
+        .selisih-hemat {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        .selisih-boros {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+
         .sop-section { padding: 0; }
         .sop-item { padding: 20px; border-bottom: 1px solid var(--border-color); }
         .sop-item:last-child { border-bottom: none; }
@@ -375,8 +389,10 @@
         .sop-item li { margin-bottom: 5px; }
 
         footer {
-            text-align: center; margin-top: 40px;
-            padding: 20px; color: var(--secondary-color);
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--secondary-color);
             font-size: 0.9rem;
         }
 
@@ -395,47 +411,19 @@
             background-color: #c82333;
         }
         
-        /* --- ATURAN RESPONSIVE TAMBAHAN --- */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 0 10px;
-            }
-            .month-navigation {
-                gap: 10px;
-            }
-            #current-month-display {
-                width: 150px;
-            }
-            .month-navigation button {
-                padding: 8px 12px;
-                font-size: 0.9rem;
-            }
-            .card {
-                padding: 20px;
-            }
-            .section {
-                padding: 20px;
-            }
-            .strategic-fund-card {
-                padding: 20px;
-            }
-            th, td {
-                padding: 10px 8px;
-                font-size: 0.9rem;
-            }
+            body { padding: 10px; }
+            .container { padding: 0 10px; }
+            .month-navigation { gap: 10px; }
+            #current-month-display { width: 150px; }
+            .month-navigation button { padding: 8px 12px; font-size: 0.9rem; }
+            .card, .section, .strategic-fund-card { padding: 20px; }
+            th, td { padding: 10px 8px; font-size: 0.9rem; }
         }
 
         @media (max-width: 480px) {
-            .dashboard {
-                gap: 15px;
-            }
-            #current-month-display {
-                width: auto;
-                flex-grow: 1;
-            }
+            .dashboard { gap: 15px; }
+            #current-month-display { width: auto; flex-grow: 1; }
         }
 
     </style>
@@ -452,11 +440,12 @@
             <button id="prev-month-btn">‹ Sebelumnya</button>
             <h2 id="current-month-display"></h2>
             <button id="next-month-btn">Selanjutnya ›</button>
+            <button id="add-month-btn">+</button>
         </nav>
 
         <section class="dashboard">
             <div class="card">
-                <h3>Total Pemasukan Likuid</h3>
+                <h3>Total Pemasukan Liquid</h3>
                 <div class="amount income" id="total-pemasukan"></div>
                 <div class="note" id="pemasukan-note"></div>
             </div>
@@ -471,7 +460,7 @@
                 <div class="note" id="sisa-kas-note"></div>
             </div>
              <div class="card">
-                <h3>Rasio Tabungan</h3>
+                <h3>Saving Rate</h3>
                 <div class="amount info" id="rasio-tabungan"></div>
                 <div class="note" id="rasio-tabungan-note"></div>
             </div>
@@ -516,7 +505,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Kategori</th><th>Item</th><th>Anggaran</th><th>Catatan</th><th>Aksi</th>
+                            <th>Kategori</th><th>Item</th><th>Anggaran</th><th>Aktual (Terpakai)</th><th>Selisih</th><th>Catatan</th><th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="expense-table-body"></tbody>
@@ -541,88 +530,23 @@
         // --- PUSAT DATA KEUANGAN (DEFAULT) ---
         const defaultFinanceData = {
             "2025-09": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'likuid' }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'non-likuid' } ],
-                pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, catatan: 'Plafon Maksimal' } ],
+                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'liquid' }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'illiquid' }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'illiquid' } ],
+                pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, aktual: 0, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, aktual: 0, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, aktual: 0, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, aktual: 0, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, aktual: 0, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, aktual: 0, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, aktual: 0, catatan: 'Plafon Maksimal' } ],
                 alokasi: [ 
-                    { nama: 'Dana Kuliah', jumlah: 0, target: 0, warna: '#007bff', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini untuk tujuan strategis.', strategi: 'Disimpan di rekening terpisah (Blu) agar tidak terpakai.' },
-                    { nama: 'Investasi (RDPU)', jumlah: 200000, target: 0, warna: '#28a745', ikon: '📈', deskripsi: 'Untuk pertumbuhan aset jangka panjang.', strategi: 'Bisa dicairkan dalam 1-2 hari jika darurat.' }, 
-                    { nama: 'Buffer Cash', jumlah: 0, persentase: 10, target: 0, warna: '#ffc107', ikon: '🛡️', deskripsi: 'Dana darurat mikro untuk kebutuhan kecil.', strategi: 'Simpan tunai atau di e-wallet.' } 
+                    { nama: 'Dana Kuliah', jumlah: 0, target: 0, warna: '#3b82f6', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini untuk tujuan strategis.', strategi: 'Disimpan di rekening terpisah (Blu) agar tidak terpakai.' },
+                    { nama: 'Investasi (RDPU)', jumlah: 200000, target: 0, warna: '#10b981', ikon: '📈', deskripsi: 'Untuk pertumbuhan aset jangka panjang.', strategi: 'Bisa dicairkan dalam 1-2 hari jika darurat.' }, 
+                    { nama: 'Buffer Cash', jumlah: 0, persentase: 10, target: 0, warna: '#f59e0b', ikon: '🛡️', deskripsi: 'Dana darurat mikro untuk kebutuhan kecil.', strategi: 'Simpan tunai atau di e-wallet.' } 
                 ],
                 danaStrategis: {
                     judul: "Dana Siaga Pembayaran Kuliah",
                     target: 1500000,
                     deskripsi: "Ini adalah total dana gabungan dari berbagai sumber yang bisa dimobilisasi jika ada tagihan kuliah mendadak sebesar Rp 1,5 Juta."
                 },
-                rencanaAksi: [ { judul: '🎯 Aturan Disiplin September', poin: ['Patuhi semua plafon pengeluaran.', 'Cicilan ortu wajib masuk ke dana kuliah.'] }, { judul: '📈 Target Oktober', poin: ['Mulai investasi rutin (DCA) Rp100k/bulan.'] } ]
+                rencanaAksi: [ { judul: '🎯 Aturan Disiplin September', poin: ['Fokus utama adalah patuh pada semua plafon pengeluaran.', 'Pastikan semua cicilan dari orang tua langsung dialokasikan ke dana kuliah.'] }, { judul: '📈 Target Oktober', poin: ['Mulai investasi rutin (DCA) minimal Rp100k/bulan.', 'Tantang diri: cari 1 pos pengeluaran yang bisa dihemat 10% bulan depan.'] } ]
             },
-            "2025-10": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 150000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 200000, catatan: 'Buffer' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Oktober', poin: ['Disiplin investasi rutin (DCA).', 'Jaga pengeluaran tak terduga.'] } ]
-            },
-            "2025-11": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 150000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Transportasi', item: 'Servis Motor', anggaran: 150000, catatan: 'Ganti Oli' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama November', poin: ['Konsisten DCA.', 'Mulai rencanakan liburan akhir tahun.'] } ]
-            },
-            "2025-12": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Hiburan', item: 'Liburan Akhir Tahun', anggaran: 400000, catatan: 'Pulang Kampung' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎆 Selamat Tahun Baru!', poin: ['Evaluasi keuangan 2025.', 'Tetapkan target baru untuk 2026.'] } ]
-            },
-            "2026-01": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Naikkan Target' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Januari', poin: ['Tingkatkan nominal DCA.', 'Cari peluang pemasukan tambahan.'] } ]
-            },
-            "2026-02": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Hasil Proyek Freelance', jumlah: 500000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'Bayar UKT Semester', anggaran: 1500000, catatan: 'Wajib' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Februari', poin: ['Pastikan UKT terbayar lunas.', 'Alokasikan sisa dana freelance dengan bijak.'] } ]
-            },
-            "2026-03": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Bonus Lebaran Ortu', jumlah: 500000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Sosial', item: 'Belanja Lebaran', anggaran: 300000, catatan: 'Baju & Kue' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🕌 Selamat Idul Fitri!', poin: ['Manfaatkan bonus untuk menambah tabungan/investasi.'] } ]
-            },
-            "2026-04": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 200000, catatan: 'Buffer' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama April', poin: ['Kembali ke rutinitas setelah lebaran.', 'Jaga konsistensi menabung.'] } ]
-            },
-            "2026-05": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Transportasi', item: 'Servis Motor', anggaran: 250000, catatan: 'Servis besar' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Mei', poin: ['Pastikan kendaraan dalam kondisi prima.'] } ]
-            },
-            "2026-06": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 200000, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' }, { kategori: 'Lain-lain', item: 'Jajan & Tak terduga', anggaran: 150000, catatan: 'Buffer' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '🎯 Fokus Utama Juni', poin: ['Mulai persiapan untuk KKN dan semester akhir.'] } ]
-            },
-            "2026-07": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' }, { sumber: 'Dana KKN dari Ortu', jumlah: 1000000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Pendidikan', item: 'Kebutuhan KKN', anggaran: 1200000, catatan: 'Transport, program, dll' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Disesuaikan' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
-                alokasi: [ { nama: 'Dana Darurat', jumlah: 0, persentase: 100, target: 5000000, warna: '#007bff', ikon: '🛡️', deskripsi: 'Pondasi keuangan untuk kebutuhan mendesak.', strategi: 'Target ideal adalah 3x pengeluaran bulanan.' } ],
-                rencanaAksi: [ { judul: '💪 Semangat KKN!', poin: ['Fokus pada program pengabdian.', 'Kelola dana KKN dengan efisien.'] } ]
-            },
-            "2026-08": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'likuid' } ],
-                pengeluaran: [ { kategori: 'Kewajiban', item: 'Bayar UKT Semester Akhir', anggaran: 1500000, catatan: 'Wajib' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, catatan: 'Prioritas' }, { kategori: 'Investasi', item: 'DCA ke RDPU', anggaran: 100000, catatan: 'Disesuaikan' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, catatan: '-' } ],
-                alokasi: [ { nama: 'Sisa Kas', jumlah: 0, persentase: 100, target: 0, warna: '#17a2b8', ikon: '💰', deskripsi: 'Sisa dana setelah kewajiban besar terpenuhi.', strategi: 'Bisa dialihkan ke dana darurat atau investasi.' } ],
-                rencanaAksi: [ { judul: '🎓 Semester Akhir!', poin: ['Fokus menyelesaikan skripsi.', 'Rencanakan keuangan pasca-kampus.'] } ]
-            }
+            // ... (Bulan-bulan berikutnya akan dibuat kosong saat inisialisasi jika tidak ada data)
         };
-        let financeData; // Dideklarasikan ulang di bawah
+        let financeData; 
 
         // --- VARIABEL GLOBAL ---
         const STORAGE_KEY = 'petaKeuanganData';
@@ -632,8 +556,22 @@
         const expenseCtx = document.getElementById('expenseChart').getContext('2d');
         let allocationChart;
         let expenseChart;
-
+        
         // --- FUNGSI-FUNGSI ---
+        function createEmptyMonthData(monthKey) {
+            return {
+                [monthKey]: {
+                    pemasukan: [],
+                    pengeluaran: [],
+                    alokasi: [
+                        { nama: 'Investasi', jumlah: 0, target: 0, warna: '#10b981', ikon: '📈', deskripsi: 'Alokasikan dana untuk pertumbuhan aset.', strategi: 'Konsisten setiap bulan (DCA).' },
+                        { nama: 'Dana Darurat', jumlah: 0, persentase: 10, target: 0, warna: '#f59e0b', ikon: '🛡️', deskripsi: 'Dana untuk kebutuhan tak terduga.', strategi: 'Simpan di tempat yang mudah diakses.' } ,
+                        { nama: 'Sisa Kas', jumlah: 0, target: 0, warna: '#3b82f6', ikon: '💰', deskripsi: 'Sisa dana setelah alokasi lain.', strategi: 'Bisa digunakan untuk tujuan lain atau ditabung.' },
+                    ],
+                    rencanaAksi: [ { judul: '🎯 Rencana Bulan Ini', poin: ['Tentukan target keuanganmu!'] } ]
+                }
+            };
+        }
         
         function saveDataToLocalStorage() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(financeData));
@@ -651,44 +589,40 @@
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
             
-            const totalPemasukanLikuid = data.pemasukan.reduce((sum, item) => item.status === 'likuid' ? sum + item.jumlah : sum, 0);
+            const totalPemasukanLiquid = data.pemasukan.reduce((sum, item) => item.status === 'liquid' ? sum + item.jumlah : sum, 0);
             const totalPengeluaran = data.pengeluaran.reduce((sum, item) => sum + item.anggaran, 0);
-            const sisaKas = totalPemasukanLikuid - totalPengeluaran;
-            const rasioTabungan = totalPemasukanLikuid > 0 ? (sisaKas / totalPemasukanLikuid) * 100 : 0;
+            const totalRealisasi = data.pengeluaran.reduce((sum, item) => sum + (item.aktual || 0), 0);
+            const sisaKas = totalPemasukanLiquid - totalPengeluaran;
+            const rasioTabungan = totalPemasukanLiquid > 0 ? (sisaKas / totalPemasukanLiquid) * 100 : 0;
+            const sisaUangRiil = totalPemasukanLiquid - totalRealisasi;
 
-            // PERBAIKAN: Logika alokasi dinamis sesuai prioritas
             let sisaKasUntukDialokasikan = sisaKas;
             
-            // 1. Hitung dan alokasikan dana berbasis persentase
             data.alokasi.forEach(item => {
                 if (item.persentase) {
-                    item.jumlah = sisaKas * (item.persentase / 100);
+                    item.jumlah = Math.max(0, sisaKas * (item.persentase / 100));
                     sisaKasUntukDialokasikan -= item.jumlah;
                 }
             });
 
-            // 2. Alokasikan dana tetap (yang bukan persentase dan bukan prioritas utama)
              data.alokasi.forEach(item => {
-                const isPrioritasUtama = item.nama === 'Dana Kuliah' || (item.persentase && item.persentase === 100);
+                const isPrioritasUtama = item.nama === 'Dana Kuliah' || item.nama === 'Sisa Kas';
                 if (!item.persentase && !isPrioritasUtama) {
                     sisaKasUntukDialokasikan -= item.jumlah;
                 }
             });
 
-            // 3. Alokasikan sisa terakhir ke prioritas utama
-            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah');
+            const prioritasUtama = data.alokasi.find(item => item.nama === 'Dana Kuliah' || item.nama === 'Sisa Kas');
             if (prioritasUtama) {
                  prioritasUtama.jumlah = Math.max(0, sisaKasUntukDialokasikan);
-            } else {
-                // Jika tidak ada 'Dana Kuliah', sisa masuk ke alokasi 100% (seperti Dana Darurat di bulan lain)
-                const alokasiSisa = data.alokasi.find(item => item.persentase === 100);
-                if(alokasiSisa) alokasiSisa.jumlah = Math.max(0, sisaKasUntukDialokasikan);
             }
 
             data.dashboard = {
-                pemasukan: totalPemasukanLikuid,
+                pemasukan: totalPemasukanLiquid,
                 pengeluaran: totalPengeluaran,
+                realisasi: totalRealisasi,
                 sisaKas: sisaKas,
+                sisaUangRiil: sisaUangRiil,
                 rasioTabungan: rasioTabungan
             };
 
@@ -706,9 +640,9 @@
             document.getElementById('total-pemasukan').textContent = formatCurrency(dashboard.pemasukan);
             document.getElementById('pemasukan-note').textContent = "Total dana siap pakai bulan ini.";
             document.getElementById('total-pengeluaran').textContent = `(${formatCurrency(dashboard.pengeluaran)})`;
-            document.getElementById('pengeluaran-note').textContent = "Total dana yang direncanakan keluar.";
+            document.getElementById('pengeluaran-note').innerHTML = `Realisasi: <strong>${formatCurrency(dashboard.realisasi)}</strong>`;
             document.getElementById('sisa-kas').textContent = formatCurrency(dashboard.sisaKas);
-            document.getElementById('sisa-kas-note').textContent = "Sisa dana untuk dialokasikan.";
+            document.getElementById('sisa-kas-note').innerHTML = `Sisa Uang Riil: <strong>${formatCurrency(dashboard.sisaUangRiil)}</strong>`;
             document.getElementById('rasio-tabungan').textContent = `${dashboard.rasioTabungan.toFixed(1)}%`;
             document.getElementById('rasio-tabungan-note').textContent = "Dari pemasukan yang berhasil disimpan.";
 
@@ -769,7 +703,7 @@
             
             const komponen = [
                 { nama: 'Alokasi dari Sisa Kas', status: '✅ Siap digunakan', jumlah: danaDariSisaKas },
-                { nama: 'Dana dari Ortu', status: '🗓️ Belum Likuid (bertahap)', jumlah: danaDariOrtu }
+                { nama: 'Dana dari Ortu', status: '🗓️ Belum Liquid (bertahap)', jumlah: danaDariOrtu }
             ];
 
             const totalDanaSiaga = komponen.reduce((sum, item) => sum + item.jumlah, 0);
@@ -788,8 +722,8 @@
 
             container.innerHTML = `
                 <div class="strategic-fund-card">
-                    <h3>💰 ${strategicData.judul}</h3>
-                    <p>${strategicData.deskripsi}</p>
+                    <h3>💰 <span contenteditable="true" data-type="danaStrategis" data-field="judul">${strategicData.judul}</span></h3>
+                    <p contenteditable="true" data-type="danaStrategis" data-field="deskripsi">${strategicData.deskripsi}</p>
                      <div class="target-info">Terkumpul: <strong>${formatCurrency(totalDanaSiaga)}</strong> dari ${formatCurrency(targetDana)}</div>
                     <div class="progress-bar-container" style="margin-bottom: 20px;">
                         <div class="progress-bar" style="width: ${progressPercentage}%;"></div>
@@ -811,7 +745,7 @@
                 const row = `
                     <tr>
                         <td contenteditable="true" data-type="pemasukan" data-index="${index}" data-field="sumber">${item.sumber}</td>
-                        <td><input type="text" class="editable-amount" value="${formatCurrency(item.jumlah)}" data-type="pemasukan" data-index="${index}"></td>
+                        <td><input type="text" class="editable-amount" value="${formatCurrency(item.jumlah)}" data-type="pemasukan" data-index="${index}" data-field="jumlah"></td>
                         <td><span class="status ${item.status}">${item.status.replace('-', ' ')}</span></td>
                         <td><button class="delete-btn" data-type="pemasukan" data-index="${index}">&#128465;</button></td>
                     </tr>`;
@@ -819,7 +753,7 @@
             });
             document.getElementById('income-table-foot').innerHTML = `
                 <tr>
-                    <td>TOTAL KAS LIKUID</td><td>${formatCurrency(totalPemasukan)}</td><td colspan="2"></td>
+                    <td>TOTAL KAS LIQUID</td><td>${formatCurrency(totalPemasukan)}</td><td colspan="2"></td>
                 </tr>`;
         }
         
@@ -827,25 +761,42 @@
             const tableBody = document.getElementById('expense-table-body');
             tableBody.innerHTML = '';
             pengeluaranData.forEach((item, index) => {
+                const aktual = item.aktual || 0;
+                const selisih = item.anggaran - aktual;
+                const selisihClass = selisih >= 0 ? 'selisih-hemat' : 'selisih-boros';
                 const row = `
                     <tr>
                         <td contenteditable="true" data-type="pengeluaran" data-index="${index}" data-field="kategori">${item.kategori}</td>
                         <td contenteditable="true" data-type="pengeluaran" data-index="${index}" data-field="item">${item.item}</td>
-                        <td><input type="text" class="editable-amount" value="${formatCurrency(item.anggaran)}" data-type="pengeluaran" data-index="${index}"></td>
+                        <td><input type="text" class="editable-amount" value="${formatCurrency(item.anggaran)}" data-type="pengeluaran" data-index="${index}" data-field="anggaran"></td>
+                        <td><input type="text" class="editable-amount" value="${formatCurrency(aktual)}" data-type="pengeluaran" data-index="${index}" data-field="aktual"></td>
+                        <td class="${selisihClass}">${formatCurrency(selisih)}</td>
                         <td contenteditable="true" data-type="pengeluaran" data-index="${index}" data-field="catatan">${item.catatan}</td>
                         <td><button class="delete-btn" data-type="pengeluaran" data-index="${index}">&#128465;</button></td>
                     </tr>`;
                 tableBody.innerHTML += row;
             });
+
+            const totalAktual = pengeluaranData.reduce((sum, item) => sum + (item.aktual || 0), 0);
+            const totalSelisih = totalPengeluaran - totalAktual;
+            const totalSelisihClass = totalSelisih >= 0 ? 'selisih-hemat' : 'selisih-boros';
              document.getElementById('expense-table-foot').innerHTML = `
                 <tr>
-                    <td colspan="2">TOTAL ANGGARAN PENGELUARAN</td><td>${formatCurrency(totalPengeluaran)}</td><td colspan="2"></td>
+                    <td colspan="2">TOTAL</td>
+                    <td>${formatCurrency(totalPengeluaran)}</td>
+                    <td>${formatCurrency(totalAktual)}</td>
+                    <td class="${totalSelisihClass}">${formatCurrency(totalSelisih)}</td>
+                    <td colspan="2"></td>
                 </tr>`;
         }
 
         function renderRencanaAksi(rencanaData) {
             const container = document.getElementById('rencana-aksi-section');
-            if(!rencanaData) return;
+            if(!rencanaData) {
+                container.style.display = 'none';
+                return;
+            };
+            container.style.display = 'block';
             while (container.children.length > 1) {
                 container.removeChild(container.lastChild);
             }
@@ -867,7 +818,8 @@
                     datasets: [{
                         data: alokasiData.map(item => item.jumlah),
                         backgroundColor: alokasiData.map(item => item.warna),
-                        borderColor: '#ffffff', borderWidth: 4
+                        borderColor: '#1f2937' /* Warna background kartu */, 
+                        borderWidth: 4
                     }]
                 },
                 options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.parsed)}` } } } }
@@ -876,51 +828,65 @@
 
         function updateExpenseChart(pengeluaranData) {
             const categoryTotals = pengeluaranData.reduce((acc, item) => {
-                acc[item.kategori] = (acc[item.kategori] || 0) + item.anggaran;
+                if (!acc[item.kategori]) {
+                    acc[item.kategori] = { anggaran: 0, aktual: 0 };
+                }
+                acc[item.kategori].anggaran += item.anggaran;
+                acc[item.kategori].aktual += (item.aktual || 0);
                 return acc;
             }, {});
+
             const labels = Object.keys(categoryTotals);
-            const data = Object.values(categoryTotals);
+            const anggaranData = labels.map(label => categoryTotals[label].anggaran);
+            const aktualData = labels.map(label => categoryTotals[label].aktual);
 
             if (expenseChart) expenseChart.destroy();
             expenseChart = new Chart(expenseCtx, {
                 type: 'bar',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Total Pengeluaran per Kategori',
-                        data: data,
-                        backgroundColor: ['#007bff', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6c757d'],
-                    }]
+                    datasets: [
+                        { label: 'Anggaran', data: anggaranData, backgroundColor: 'rgba(59, 130, 246, 0.5)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1 },
+                        { label: 'Aktual', data: aktualData, backgroundColor: 'rgba(16, 185, 129, 0.7)', borderColor: 'rgba(16, 185, 129, 1)', borderWidth: 1 }
+                    ]
                 },
                 options: {
                     indexAxis: 'y', responsive: true,
-                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.parsed.x)}` } } }
+                    plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: (c) => `${c.dataset.label}: ${formatCurrency(c.parsed.x)}` } } }
                 }
             });
         }
         
-        function handleTableAction(event) {
+        function handleContentAction(event) {
             const target = event.target;
+            const dataType = target.dataset.type;
+            if (!dataType) return;
+
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
-            const type = target.dataset.type;
-            const index = parseInt(target.dataset.index, 10);
             
             let needsRecalculate = false;
             let needsSave = false;
 
             if (target.classList.contains('editable-amount') && event.type === 'change') {
-                const field = type === 'pemasukan' ? 'jumlah' : 'anggaran';
-                data[type][index][field] = parseCurrency(target.value);
+                const index = parseInt(target.dataset.index, 10);
+                const field = target.dataset.field;
+                data[dataType][index][field] = parseCurrency(target.value);
                 needsRecalculate = true;
                 needsSave = true;
             } else if (target.hasAttribute('contenteditable') && event.type === 'blur') {
-                 data[type][index][target.dataset.field] = target.textContent;
+                const field = target.dataset.field;
+                if (dataType === 'danaStrategis') {
+                    data[dataType][field] = target.textContent;
+                } else {
+                    const index = parseInt(target.dataset.index, 10);
+                    data[dataType][index][field] = target.textContent;
+                }
                  needsSave = true;
             } else if (target.classList.contains('delete-btn')) {
+                const index = parseInt(target.dataset.index, 10);
                 if (confirm('Anda yakin ingin menghapus baris ini?')) {
-                    data[type].splice(index, 1);
+                    data[dataType].splice(index, 1);
                     needsRecalculate = true;
                     needsSave = true;
                 }
@@ -938,20 +904,38 @@
             if (currentMonthIndex > 0) { currentMonthIndex--; recalculateAndRender(); }
         });
         document.getElementById('add-income-btn').addEventListener('click', () => {
-            financeData[availableMonths[currentMonthIndex]].pemasukan.push({ sumber: 'Sumber Baru', jumlah: 0, status: 'likuid' });
+            financeData[availableMonths[currentMonthIndex]].pemasukan.push({ sumber: 'Sumber Baru', jumlah: 0, status: 'liquid' });
             saveDataToLocalStorage();
             recalculateAndRender();
         });
         document.getElementById('add-expense-btn').addEventListener('click', () => {
-            financeData[availableMonths[currentMonthIndex]].pengeluaran.push({ kategori: 'Kategori Baru', item: 'Item Baru', anggaran: 0, catatan: '-' });
+            financeData[availableMonths[currentMonthIndex]].pengeluaran.push({ kategori: 'Kategori Baru', item: 'Item Baru', anggaran: 0, aktual: 0, catatan: '-' });
             saveDataToLocalStorage();
             recalculateAndRender();
         });
+        document.getElementById('add-month-btn').addEventListener('click', () => {
+            const lastMonthKey = availableMonths[availableMonths.length - 1];
+            const [year, month] = lastMonthKey.split('-').map(Number);
+            let nextYear = year;
+            let nextMonth = month + 1;
+            if (nextMonth > 12) {
+                nextMonth = 1;
+                nextYear++;
+            }
+            const newMonthKey = `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
+            if (!financeData[newMonthKey]) {
+                Object.assign(financeData, createEmptyMonthData(newMonthKey));
+                availableMonths = Object.keys(financeData);
+                currentMonthIndex = availableMonths.length - 1;
+                saveDataToLocalStorage();
+                recalculateAndRender();
+            }
+        });
 
         const container = document.querySelector('.container');
-        container.addEventListener('change', handleTableAction);
-        container.addEventListener('click', handleTableAction);
-        container.addEventListener('blur', handleTableAction, true);
+        container.addEventListener('change', handleContentAction);
+        container.addEventListener('click', handleContentAction);
+        container.addEventListener('blur', handleContentAction, true);
 
         // --- INISIALISASI ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -959,17 +943,27 @@
             if (savedData) {
                 financeData = JSON.parse(savedData);
             } else {
-                financeData = defaultFinanceData;
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                let newYearData = {};
+                for (let i = 0; i < 12; i++) {
+                    const monthKey = `${currentYear}-${String(i + 1).padStart(2, '0')}`;
+                    Object.assign(newYearData, createEmptyMonthData(monthKey));
+                }
+                financeData = newYearData;
+                saveDataToLocalStorage();
             }
             availableMonths = Object.keys(financeData);
+
+            // Set up global chart styles for dark mode
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.borderColor = '#374151';
+
             recalculateAndRender();
 
             document.getElementById('reset-data-btn').addEventListener('click', () => {
                 if (confirm('PERINGATAN: Aksi ini akan menghapus semua perubahan yang telah Anda simpan dan mengembalikan data ke kondisi awal. Lanjutkan?')) {
                     localStorage.removeItem(STORAGE_KEY);
-                    financeData = defaultFinanceData;
-                    availableMonths = Object.keys(financeData);
-                    saveDataToLocalStorage();
                     location.reload();
                 }
             });
@@ -978,4 +972,3 @@
 
 </body>
 </html>
-
