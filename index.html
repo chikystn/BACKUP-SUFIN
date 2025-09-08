@@ -282,7 +282,7 @@
             font-weight: 600;
             margin-top: 20px;
         }
-       
+        
         .table-wrapper {
             overflow-x: auto;
         }
@@ -302,13 +302,14 @@
             vertical-align: top;
         }
 
-        td[contenteditable="true"] {
+        td[contenteditable="true"], [contenteditable="true"] {
             cursor: text;
             background-color: #374151;
         }
-        td[contenteditable="true"]:focus {
+        td[contenteditable="true"]:focus, [contenteditable="true"]:focus {
             background-color: #4b5563;
             outline: 2px solid var(--primary-color);
+            border-radius: 4px;
         }
         
         th {
@@ -361,16 +362,32 @@
         }
         .add-row-btn:hover { background-color: #059669; }
 
-        .status {
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            display: inline-block;
-            white-space: nowrap;
-        }
         .status.liquid { background-color: rgba(16, 185, 129, 0.2); color: #a7f3d0; }
         .status.illiquid { background-color: rgba(245, 158, 11, 0.2); color: #fde68a; }
+        .status.none { background-color: rgba(107, 114, 128, 0.2); color: #9ca3af; }
+
+        .status-select {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        .status-select:focus {
+            outline: 2px solid var(--primary-color);
+            border-color: var(--primary-color);
+        }
         
         .selisih-hemat {
             color: var(--success-color);
@@ -544,7 +561,6 @@
                 },
                 rencanaAksi: [ { judul: '🎯 Aturan Disiplin September', poin: ['Fokus utama adalah patuh pada semua plafon pengeluaran.', 'Pastikan semua cicilan dari orang tua langsung dialokasikan ke dana kuliah.'] }, { judul: '📈 Target Oktober', poin: ['Mulai investasi rutin (DCA) minimal Rp100k/bulan.', 'Tantang diri: cari 1 pos pengeluaran yang bisa dihemat 10% bulan depan.'] } ]
             },
-            // ... (Bulan-bulan berikutnya akan dibuat kosong saat inisialisasi jika tidak ada data)
         };
         let financeData; 
 
@@ -661,7 +677,7 @@
         function renderAllocationDetails(alokasiData) {
             const container = document.getElementById('allocation-details-container');
             container.innerHTML = '';
-            alokasiData.forEach(item => {
+            alokasiData.forEach((item, index) => {
                 let progressHTML = '';
                 if (item.target > 0) {
                     const progressPercentage = Math.min((item.jumlah / item.target) * 100, 100);
@@ -675,12 +691,12 @@
                 const persenNote = item.persentase ? `<div class="note-persen">(${item.persentase}% dari Sisa Kas)</div>` : '';
                 const cardHTML = `
                     <div class="allocation-card">
-                        <h3>${item.ikon} ${item.nama}</h3>
+                        <h3>${item.ikon} <span contenteditable="true" data-type="alokasi" data-index="${index}" data-field="nama">${item.nama}</span></h3>
                         <div class="amount">${formatCurrency(item.jumlah)}</div>
                         ${persenNote}
                         ${progressHTML}
-                        <p><strong>Tujuan:</strong> ${item.deskripsi}</p>
-                        <p><strong>Strategi:</strong> ${item.strategi}</p>
+                        <p><strong>Tujuan:</strong> <span contenteditable="true" data-type="alokasi" data-index="${index}" data-field="deskripsi">${item.deskripsi}</span></p>
+                        <p><strong>Strategi:</strong> <span contenteditable="true" data-type="alokasi" data-index="${index}" data-field="strategi">${item.strategi}</span></p>
                     </div>`;
                 container.innerHTML += cardHTML;
             });
@@ -742,11 +758,20 @@
             const tableBody = document.getElementById('income-table-body');
             tableBody.innerHTML = '';
             pemasukanData.forEach((item, index) => {
+                const statusOptions = ['liquid', 'illiquid', 'none'];
+                const optionsHTML = statusOptions.map(opt =>
+                    `<option value="${opt}" ${item.status === opt ? 'selected' : ''}>${opt.charAt(0).toUpperCase() + opt.slice(1)}</option>`
+                ).join('');
+
                 const row = `
                     <tr>
                         <td contenteditable="true" data-type="pemasukan" data-index="${index}" data-field="sumber">${item.sumber}</td>
                         <td><input type="text" class="editable-amount" value="${formatCurrency(item.jumlah)}" data-type="pemasukan" data-index="${index}" data-field="jumlah"></td>
-                        <td><span class="status ${item.status}">${item.status.replace('-', ' ')}</span></td>
+                        <td>
+                            <select class="status-select" data-type="pemasukan" data-index="${index}" data-field="status">
+                                ${optionsHTML}
+                            </select>
+                        </td>
                         <td><button class="delete-btn" data-type="pemasukan" data-index="${index}">&#128465;</button></td>
                     </tr>`;
                 tableBody.innerHTML += row;
@@ -800,11 +825,13 @@
             while (container.children.length > 1) {
                 container.removeChild(container.lastChild);
             }
-            rencanaData.forEach(item => {
+            rencanaData.forEach((item, index) => {
                 const sopItem = document.createElement('div');
                 sopItem.className = 'sop-item';
-                const pointsHtml = item.poin.map(p => `<li>${p}</li>`).join('');
-                sopItem.innerHTML = `<h4>${item.judul}</h4><ul>${pointsHtml}</ul>`;
+                const pointsHtml = item.poin.map((p, pointIndex) => 
+                    `<li contenteditable="true" data-type="rencanaAksi" data-index="${index}" data-point-index="${pointIndex}">${p}</li>`
+                ).join('');
+                sopItem.innerHTML = `<h4 contenteditable="true" data-type="rencanaAksi" data-index="${index}" data-field="judul">${item.judul}</h4><ul>${pointsHtml}</ul>`;
                 container.appendChild(sopItem);
             });
         }
@@ -818,7 +845,7 @@
                     datasets: [{
                         data: alokasiData.map(item => item.jumlah),
                         backgroundColor: alokasiData.map(item => item.warna),
-                        borderColor: '#1f2937' /* Warna background kartu */, 
+                        borderColor: '#1f2937',
                         borderWidth: 4
                     }]
                 },
@@ -868,7 +895,14 @@
             let needsRecalculate = false;
             let needsSave = false;
 
-            if (target.classList.contains('editable-amount') && event.type === 'change') {
+            if (target.tagName === 'SELECT' && event.type === 'change') {
+                const index = parseInt(target.dataset.index, 10);
+                const field = target.dataset.field;
+                data[dataType][index][field] = target.value;
+                needsRecalculate = true;
+                needsSave = true;
+            } 
+            else if (target.classList.contains('editable-amount') && event.type === 'change') {
                 const index = parseInt(target.dataset.index, 10);
                 const field = target.dataset.field;
                 data[dataType][index][field] = parseCurrency(target.value);
@@ -878,11 +912,24 @@
                 const field = target.dataset.field;
                 if (dataType === 'danaStrategis') {
                     data[dataType][field] = target.textContent;
-                } else {
+                    needsSave = true;
+                } 
+                else if (dataType === 'rencanaAksi') { 
+                    const index = parseInt(target.dataset.index, 10);
+                    const pointIndex = target.dataset.pointIndex; 
+
+                    if (pointIndex !== undefined) {
+                        data.rencanaAksi[index].poin[parseInt(pointIndex, 10)] = target.textContent;
+                    } else if (field === 'judul') {
+                        data.rencanaAksi[index].judul = target.textContent;
+                    }
+                    needsSave = true;
+                } 
+                else {
                     const index = parseInt(target.dataset.index, 10);
                     data[dataType][index][field] = target.textContent;
+                    needsSave = true;
                 }
-                 needsSave = true;
             } else if (target.classList.contains('delete-btn')) {
                 const index = parseInt(target.dataset.index, 10);
                 if (confirm('Anda yakin ingin menghapus baris ini?')) {
@@ -904,7 +951,7 @@
             if (currentMonthIndex > 0) { currentMonthIndex--; recalculateAndRender(); }
         });
         document.getElementById('add-income-btn').addEventListener('click', () => {
-            financeData[availableMonths[currentMonthIndex]].pemasukan.push({ sumber: 'Sumber Baru', jumlah: 0, status: 'liquid' });
+            financeData[availableMonths[currentMonthIndex]].pemasukan.push({ sumber: 'Sumber Baru', jumlah: 0, status: 'none' });
             saveDataToLocalStorage();
             recalculateAndRender();
         });
@@ -955,7 +1002,6 @@
             }
             availableMonths = Object.keys(financeData);
 
-            // Set up global chart styles for dark mode
             Chart.defaults.color = '#9ca3af';
             Chart.defaults.borderColor = '#374151';
 
