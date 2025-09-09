@@ -300,18 +300,6 @@
             position: relative;
         }
 
-        .table-wrapper.is-scrollable::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 30px;
-            pointer-events: none;
-            background: linear-gradient(to right, transparent, var(--card-bg));
-            transition: opacity 0.2s;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -328,11 +316,6 @@
             vertical-align: middle;
         }
         
-        td:first-child, th:first-child,
-        td[data-field="catatan"] {
-             white-space: normal;
-        }
-
         [contenteditable="true"] {
             cursor: text;
             background-color: #374151;
@@ -368,10 +351,10 @@
             font-family: inherit;
             font-size: inherit;
             color: inherit;
-            width: 100%;
             min-width: 100px;
             padding: 4px;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         .editable-amount:focus {
             outline: none;
@@ -448,6 +431,15 @@
         .sop-item ul { padding-left: 20px; margin: 0; color: var(--secondary-color); }
         .sop-item li { margin-bottom: 5px; }
 
+        .mobile-scroll-hint {
+            display: none;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            text-align: right;
+            margin-bottom: -10px;
+            padding-right: 10px;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -465,7 +457,7 @@
             border-radius: 8px;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: background-color: 0.2s ease;
+            transition: background-color 0.2s ease;
         }
         #reset-data-btn:hover {
             background-color: #c82333;
@@ -478,7 +470,15 @@
             #current-month-display { width: 150px; }
             .month-navigation button { padding: 8px 12px; font-size: 0.9rem; }
             .card, .section, .strategic-fund-card { padding: 20px; }
-            th, td { padding: 10px 8px; font-size: 0.85rem; }
+            
+            .mobile-scroll-hint {
+                display: block;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -489,7 +489,7 @@
             .card, .section, .strategic-fund-card { padding: 15px; }
             .section h2 { font-size: 1.3rem; }
             .card .amount { font-size: 1.4rem; }
-            .editable-amount { min-width: 80px; }
+            .editable-amount { min-width: 90px; }
         }
 
         @media print {
@@ -588,9 +588,10 @@
 
         <section class="section">
             <h2>Rincian Pemasukan & Dana Tersedia</h2>
+            <p class="mobile-scroll-hint">Geser tabel untuk melihat semua kolom →</p>
             <div class="table-wrapper">
-                <table>
-                    <thead>
+                <table data-table-name="pemasukan">
+                    <thead id="income-table-head">
                         <tr>
                             <th>Sumber Pemasukan</th><th>Jumlah</th><th>Status</th><th>Strategis?</th><th>Aksi</th>
                         </tr>
@@ -604,12 +605,13 @@
 
         <section class="section">
             <h2>Rincian & Analisis Pengeluaran</h2>
+            <p class="mobile-scroll-hint">Geser tabel untuk melihat semua kolom →</p>
              <div class="chart-container">
                 <canvas id="expenseChart"></canvas>
             </div>
             <div class="table-wrapper">
-                <table>
-                    <thead>
+                <table data-table-name="pengeluaran">
+                    <thead id="expense-table-head">
                         <tr>
                             <th>Kategori</th><th>Item</th><th>Anggaran</th><th>Aktual (Terpakai)</th><th>Selisih</th><th>Catatan</th><th>Aksi</th>
                         </tr>
@@ -633,28 +635,7 @@
     </div>
 
     <script>
-        // --- PUSAT DATA KEUANGAN (DEFAULT) ---
-        const defaultFinanceData = {
-            "2025-09": {
-                pemasukan: [ { sumber: 'Uang Saku Bulanan', jumlah: 1100000, status: 'liquid', untukDanaStrategis: false }, { sumber: 'Uang Kembali dari Teman', jumlah: 450000, status: 'illiquid', untukDanaStrategis: true }, { sumber: 'Cicilan dari Orang Tua', jumlah: 850000, status: 'illiquid', untukDanaStrategis: false } ],
-                pengeluaran: [ { kategori: 'Bimbingan Skripsi', item: 'Transportasi PP', anggaran: 120000, aktual: 0, catatan: 'BBM NMAX' }, { kategori: 'Bimbingan Skripsi', item: 'Penginapan Hemat', anggaran: 120000, aktual: 0, catatan: 'Kos Harian' }, { kategori: 'Bimbingan Skripsi', item: 'Makan & Jajan', anggaran: 80000, aktual: 0, catatan: '-' }, { kategori: 'Kebutuhan Pribadi', item: 'Potong Rambut', anggaran: 40000, aktual: 0, catatan: 'Rutin' }, { kategori: 'Kebutuhan Pribadi', item: 'Skincare Basic', anggaran: 100000, aktual: 0, catatan: 'Stok ulang' }, { kategori: 'Kewajiban', item: 'WiFi Bulanan', anggaran: 150000, aktual: 0, catatan: 'Prioritas' }, { kategori: 'Sosialisasi', item: 'First Date', anggaran: 100000, aktual: 0, catatan: 'Plafon Maksimal' } ],
-                alokasi: [ 
-                    { nama: 'Dana Kuliah', jumlah: 0, target: 0, warna: '#3b82f6', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini untuk tujuan strategis.', strategi: 'Disimpan di rekening terpisah (Blu) agar tidak terpakai.' },
-                    { nama: 'Investasi', jumlah: 0, persentase: 23.8, target: 0, warna: '#10b981', ikon: '📈', deskripsi: 'Untuk pertumbuhan aset jangka panjang.', strategi: 'Bisa dicairkan dalam 1-2 hari jika darurat.' }, 
-                    { nama: 'Buffer Cash', jumlah: 0, persentase: 10, target: 0, warna: '#f59e0b', ikon: '🛡️', deskripsi: 'Dana darurat mikro untuk kebutuhan kecil.', strategi: 'Simpan tunai atau di e-wallet.' } 
-                ],
-                danaStrategis: {
-                    judul: "Dana Siaga Pembayaran Kuliah",
-                    target: 1500000,
-                    deskripsi: "Ini adalah total dana gabungan dari berbagai sumber yang bisa dimobilisasi jika ada tagihan kuliah mendadak.",
-                    komponen: [
-                        { id: 'auto_sisa_kas', nama: 'Alokasi dari Sisa Kas', status: '✅ Siap digunakan', jumlah: 0 },
-                        { id: 'auto_ortu', nama: 'Dana dari Ortu', status: '🗓️ Belum Liquid (bertahap)', jumlah: 0 }
-                    ]
-                },
-                rencanaAksi: [ { judul: '🎯 Aturan Disiplin September', poin: ['Fokus utama adalah patuh pada semua plafon pengeluaran.', 'Pastikan semua cicilan dari orang tua langsung dialokasikan ke dana kuliah.'] }, { judul: '📈 Target Oktober', poin: ['Mulai investasi rutin (DCA) minimal Rp100k/bulan.', 'Tantang diri: cari 1 pos pengeluaran yang bisa dihemat 10% bulan depan.'] } ]
-            },
-        };
+        // --- PUSAT DATA KEUANGAN ---
         let financeData; 
 
         // --- VARIABEL GLOBAL ---
@@ -682,8 +663,7 @@
                         target: 1500000,
                         deskripsi: "Lacak dana gabungan untuk tujuan pembayaran kuliah mendadak.",
                         komponen: [
-                            { id: 'auto_sisa_kas', nama: 'Alokasi dari Sisa Kas', status: '✅ Siap digunakan', jumlah: 0 },
-                            { id: 'auto_ortu', nama: 'Dana dari Ortu', status: '🗓️ Belum Liquid (bertahap)', jumlah: 0 }
+                            { id: 'auto_sisa_kas', nama: 'Alokasi dari Sisa Kas', status: '✅ Siap digunakan', jumlah: 0 }
                         ]
                     },
                     rencanaAksi: [ { judul: '🎯 Rencana Bulan Ini', poin: ['Tentukan target keuanganmu!'] } ]
@@ -703,6 +683,20 @@
             return Number(String(formattedString).replace(/[^0-9]/g, ''));
         }
         
+        function updateHeadersForMobileView() {
+            const isMobile = window.innerWidth <= 768;
+            
+            const incomeHeaders = document.querySelectorAll('#income-table-head th');
+            if (incomeHeaders.length) {
+                incomeHeaders[0].textContent = isMobile ? 'Sumber' : 'Sumber Pemasukan';
+            }
+
+            const expenseHeaders = document.querySelectorAll('#expense-table-head th');
+            if (expenseHeaders.length) {
+                expenseHeaders[3].textContent = isMobile ? 'Aktual' : 'Aktual (Terpakai)';
+            }
+        }
+
         function recalculateAndRender() {
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
@@ -732,19 +726,14 @@
                 if (!data.danaStrategis.komponen) data.danaStrategis.komponen = [];
 
                 const danaDariSisaKas = data.alokasi.find(item => item.nama === 'Dana Kuliah')?.jumlah || 0;
-                const danaDariOrtu = data.pemasukan.find(item => item.sumber === 'Cicilan dari Orang Tua')?.jumlah || 0;
 
                 const manualKomponen = data.danaStrategis.komponen.filter(c => c.id && c.id.startsWith('manual_'));
                 let autoKomponen = data.danaStrategis.komponen.filter(c => c.id && c.id.startsWith('auto_'));
                 
                 if (!autoKomponen.find(c => c.id === 'auto_sisa_kas')) autoKomponen.push({ id: 'auto_sisa_kas', nama: 'Alokasi dari Sisa Kas', status: '✅ Siap digunakan', jumlah: 0 });
-                if (!autoKomponen.find(c => c.id === 'auto_ortu')) autoKomponen.push({ id: 'auto_ortu', nama: 'Dana dari Ortu', status: '🗓️ Belum Liquid (bertahap)', jumlah: 0 });
 
                 const sisaKasComponent = autoKomponen.find(c => c.id === 'auto_sisa_kas');
                 if (sisaKasComponent) sisaKasComponent.jumlah = danaDariSisaKas;
-
-                const ortuComponent = autoKomponen.find(c => c.id === 'auto_ortu');
-                if (ortuComponent) ortuComponent.jumlah = danaDariOrtu;
 
                 const pemasukanKomponen = data.pemasukan
                     .filter(p => p.untukDanaStrategis)
@@ -788,6 +777,7 @@
             document.getElementById('rasio-tabungan').textContent = `${dashboard.rasioTabungan.toFixed(1)}%`;
             document.getElementById('rasio-tabungan-note').textContent = "Dari pemasukan yang berhasil disimpan.";
 
+            updateHeadersForMobileView();
             renderAllocationDetails(data.alokasi);
             renderStrategicFund(data);
             renderIncomeTable(data.pemasukan, dashboard.pemasukan);
@@ -1028,9 +1018,9 @@
         }
 
         function checkTableOverflow() {
-            const wrappers = document.querySelectorAll('.table-wrapper');
-            wrappers.forEach(wrapper => {
-                if (wrapper.scrollWidth > wrapper.clientWidth) {
+            document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+                const isScrollable = wrapper.scrollWidth > wrapper.clientWidth;
+                if (isScrollable) {
                     wrapper.classList.add('is-scrollable');
                 } else {
                     wrapper.classList.remove('is-scrollable');
@@ -1209,20 +1199,48 @@
             if (savedData) {
                 financeData = JSON.parse(savedData);
             } else {
-                financeData = defaultFinanceData;
+                const today = new Date();
+                const currentYear = today.getFullYear();
+                let newYearData = {};
+                for (let i = 0; i < 12; i++) {
+                    const monthKey = `${currentYear}-${String(i + 1).padStart(2, '0')}`;
+                    Object.assign(newYearData, createEmptyMonthData(monthKey));
+                }
+                financeData = newYearData;
                 saveDataToLocalStorage();
             }
             availableMonths = Object.keys(financeData).sort();
+            
+            const today = new Date();
+            const currentMonthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            const startingIndex = availableMonths.indexOf(currentMonthKey);
+            currentMonthIndex = startingIndex !== -1 ? startingIndex : 0;
 
             Chart.defaults.color = '#9ca3af';
             Chart.defaults.borderColor = '#374151';
 
             recalculateAndRender();
 
-            window.addEventListener('resize', checkTableOverflow);
+            window.addEventListener('resize', () => {
+                checkTableOverflow();
+                updateHeadersForMobileView();
+            });
+
+            document.querySelectorAll('.table-wrapper').forEach(wrapper => {
+                wrapper.addEventListener('scroll', () => {
+                    const isScrolled = wrapper.scrollLeft > 0;
+                    const isAtEnd = wrapper.scrollWidth - wrapper.scrollLeft === wrapper.clientWidth;
+                    if (isAtEnd) {
+                        wrapper.classList.remove('is-scrollable');
+                    } else {
+                        wrapper.classList.add('is-scrollable');
+                    }
+                });
+            });
+
 
             document.getElementById('reset-data-btn').addEventListener('click', () => {
-                if (confirm('PERINGATAN: Aksi ini akan menghapus semua perubahan yang telah Anda simpan dan mengembalikan data ke kondisi awal. Lanjutkan?')) {
+                if (confirm('PERINGATAN: Aksi ini akan menghapus semua data dan mengembalikan aplikasi ke kondisi awal yang kosong untuk tahun ini. Lanjutkan?')) {
                     localStorage.removeItem(STORAGE_KEY);
                     location.reload();
                 }
