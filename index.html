@@ -615,6 +615,11 @@
                 <div class="amount surplus" id="sisa-kas"></div>
                 <div class="note" id="sisa-kas-note"></div>
             </div>
+            <div class="card">
+                <h3>Saving Rate</h3>
+                <div class="amount info" id="rasio-tabungan"></div>
+                <div class="note" id="rasio-tabungan-note"></div>
+            </div>
              <div class="card">
                 <h3>Total Aset Kumulatif</h3>
                 <div class="amount info" id="total-aset"></div>
@@ -718,7 +723,7 @@
             modal.style.display = 'flex';
             confirmCallback = callback;
         }
-
+        
         function createEmptyMonthData(monthKey) {
             return {
                 [monthKey]: {
@@ -1010,6 +1015,8 @@
             document.getElementById('pengeluaran-note').innerHTML = `Realisasi: <strong>${formatCurrency(dashboard.realisasi)}</strong>`;
             document.getElementById('sisa-kas').textContent = formatCurrency(dashboard.sisaKas);
             document.getElementById('sisa-kas-note').innerHTML = `Surplus dari dana operasional.`;
+            document.getElementById('rasio-tabungan').textContent = `${dashboard.rasioTabungan.toFixed(1)}%`;
+            document.getElementById('rasio-tabungan-note').textContent = "Dari total pemasukan cair.";
             document.getElementById('total-aset').textContent = formatCurrency(dashboard.totalAset);
             document.getElementById('total-aset-note').textContent = "Akumulasi tabungan & investasi Anda.";
 
