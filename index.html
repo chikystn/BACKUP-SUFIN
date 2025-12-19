@@ -110,12 +110,15 @@
         .section { background-color: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 30px; }
         .section h2 { font-size: clamp(1.5rem, 6vw, 1.8rem); margin-top: 0; padding-bottom: 10px; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
 
-        /* --- WRAPPED / BRIMO STYLE --- */
+        /* --- WRAPPED / BRIMO STYLE (NEW LAYOUT) --- */
         #trend-analysis-section {
             background: var(--wrapped-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center everything */
         }
         /* Efek Glow di background */
         #trend-analysis-section::before {
@@ -129,10 +132,11 @@
         }
 
         .wrapped-header {
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
             gap: 10px;
             position: relative;
@@ -146,63 +150,13 @@
             -webkit-text-fill-color: transparent;
             margin: 0;
         }
-        
-        .wrapped-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-        }
-        @media (min-width: 768px) {
-            .wrapped-content {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-            .wrapped-main-stat { flex: 1; }
-            .wrapped-chart-area { flex: 0 0 350px; }
-        }
-
-        .persona-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .persona-title { font-size: 0.9rem; color: var(--secondary-color); margin-bottom: 5px; }
-        .persona-badge {
-            display: inline-block;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            margin-bottom: 5px;
-        }
-        .persona-desc { font-size: 0.9rem; color: #d1d5db; line-height: 1.4; }
-
-        .highlight-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        .highlight-card {
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 10px;
-        }
-        .highlight-label { font-size: 0.8rem; color: var(--secondary-color); margin-bottom: 5px; display: block; }
-        .highlight-value { font-size: 1rem; font-weight: 700; color: var(--text-color); display: block; }
-        .highlight-sub { font-size: 0.8rem; color: var(--primary-color); margin-top: 3px; display: block; }
 
         .wrapped-controls {
             display: flex;
             gap: 10px;
             background: rgba(0,0,0,0.3);
-            padding: 10px;
+            padding: 8px 12px;
             border-radius: 8px;
-            margin-bottom: 15px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -215,26 +169,142 @@
         }
         .wrapped-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
 
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .stat-row:last-child { border-bottom: none; }
-        .stat-label { color: var(--secondary-color); }
-        .stat-val { font-weight: 600; }
-        .stat-val.inc { color: var(--success-color); }
-        .stat-val.exp { color: var(--danger-color); }
-        
-        .chart-container-wrapped {
-            height: 250px;
+        /* --- CENTER STATS LAYOUT --- */
+        .trend-center-stats {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
             position: relative;
+            z-index: 1;
+        }
+        
+        .stat-net-group {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-label-center {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .stat-value-center {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
         }
 
+        .stat-flow-group {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+        }
+        .flow-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .flow-label {
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .flow-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .flow-value.inc { color: var(--success-color); }
+        .flow-value.exp { color: var(--danger-color); }
+
+        /* --- CHART & DETAILS --- */
+        .chart-container-trend-center {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px auto;
+            z-index: 1;
+        }
+
+        .trend-bottom-details {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            z-index: 1;
+        }
+        @media (min-width: 640px) {
+            .trend-bottom-details {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .persona-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: left;
+        }
+        .persona-title { font-size: 0.85rem; color: var(--secondary-color); margin-bottom: 5px; }
+        .persona-badge {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .persona-desc { font-size: 0.9rem; color: #d1d5db; line-height: 1.4; }
+
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .highlight-card {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .highlight-label { font-size: 0.75rem; color: var(--secondary-color); margin-bottom: 5px; display: block; }
+        .highlight-value { font-size: 0.95rem; font-weight: 700; color: var(--text-color); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+        .highlight-sub { font-size: 0.8rem; color: var(--primary-color); margin-top: 3px; display: block; }
+
+        /* SVG Icons Styling */
+        .icon-svg-sm { width: 16px; height: 16px; }
+        .icon-svg-md { width: 20px; height: 20px; }
+        
         /* ----------------------------------- */
 
+        /* Container Umum untuk Grafik Pengeluaran (Bar) */
         .chart-container { position: relative; max-width: 100%; margin: 20px auto; min-height: 300px; }
+
+        /* Container Khusus untuk Grafik Alokasi (Doughnut) */
+        .chart-container-allocation {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            height: 350px;
+            margin: 20px auto;
+        }
+
+        @media (max-width: 480px) {
+            .chart-container-allocation {
+                height: 280px;
+                max-width: 280px;
+            }
+        }
 
         .allocation-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); }
         .allocation-card { background-color: #374151; border-radius: 10px; padding: 20px; border: 1px solid var(--border-color); }
@@ -282,6 +352,11 @@
         .strategic-checkbox { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary-color); vertical-align: middle; }
         .selisih-hemat { color: var(--success-color); font-weight: 600; }
         .selisih-boros { color: var(--danger-color); font-weight: 600; }
+
+        /* Style Khusus Profit/Loss di Portofolio */
+        .text-profit { color: var(--success-color); font-weight: 600; }
+        .text-loss { color: var(--danger-color); font-weight: 600; }
+        .text-neutral { color: var(--secondary-color); }
 
         .sop-section { padding: 0; }
         .sop-item { padding: 20px; border-bottom: 1px solid var(--border-color); }
@@ -384,7 +459,7 @@
             </div>
         </section>
 
-        <!-- SEKSI: My Wrapped / Trend (New Design) -->
+        <!-- SEKSI: My Wrapped / Trend (New Design CENTER) -->
         <section class="section" id="trend-analysis-section">
             <div class="wrapped-header">
                 <h2 class="wrapped-title">✨ My Financial Wrapped</h2>
@@ -399,54 +474,104 @@
                 </div>
             </div>
             
-            <div class="wrapped-content">
-                <!-- Kolom Kiri: Statistik & Insight -->
-                <div class="wrapped-main-stat">
-                    <!-- Persona Card -->
-                    <div class="persona-card">
-                        <div class="persona-title">Persona Keuangan Kamu:</div>
-                        <div id="wrapped-persona" class="persona-badge">Memuat...</div>
-                        <div id="wrapped-insight" class="persona-desc">Mengalkulasi data keuanganmu...</div>
+            <!-- Statistik Terpusat -->
+            <div class="trend-center-stats">
+                <div class="stat-net-group">
+                    <div class="stat-label-center">
+                        <svg class="icon-svg-md icon-net" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                        Selisih (Net)
                     </div>
-
-                    <!-- Highlight Grid -->
-                    <div class="highlight-grid">
-                        <div class="highlight-card">
-                            <span class="highlight-label">🛍️ Paling Sering Jajan Di:</span>
-                            <span id="wrapped-top-exp-cat" class="highlight-value">-</span>
-                            <span id="wrapped-top-exp-val" class="highlight-sub">Rp 0</span>
-                        </div>
-                        <div class="highlight-card">
-                            <span class="highlight-label">💸 Sumber Cuan Terbesar:</span>
-                            <span id="wrapped-top-inc-src" class="highlight-value">-</span>
-                            <span id="wrapped-top-inc-val" class="highlight-sub">Rp 0</span>
-                        </div>
+                    <div id="wrapped-net-flow" class="stat-value-center">Rp 0</div>
+                </div>
+                
+                <div class="stat-flow-group">
+                    <div class="flow-item">
+                        <span class="flow-label">
+                            <svg class="icon-svg-sm icon-income" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                            Pemasukan
+                        </span>
+                        <span id="wrapped-total-inc" class="flow-value inc">Rp 0</span>
                     </div>
-
-                    <!-- Summary Stats -->
-                    <div class="stat-row">
-                        <span class="stat-label">Total Uang Masuk</span>
-                        <span id="wrapped-total-inc" class="stat-val inc">Rp 0</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Total Uang Keluar</span>
-                        <span id="wrapped-total-exp" class="stat-val exp">Rp 0 -</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Selisih Bersih (Aset)</span>
-                        <span id="wrapped-net-flow" class="stat-val" style="color: var(--primary-color);">Rp 0</span>
+                    <div class="flow-item">
+                        <span class="flow-label">
+                            <svg class="icon-svg-sm icon-expense" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            Pengeluaran
+                        </span>
+                        <span id="wrapped-total-exp" class="flow-value exp">- Rp 0</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Kolom Kanan: Chart -->
-                <div class="wrapped-chart-area">
-                    <div class="chart-container-wrapped">
-                        <canvas id="trendChart"></canvas>
+            <!-- Chart di Tengah (Doughnut dengan Gradasi) -->
+            <div class="chart-container-trend-center">
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <!-- Detail Bawah (Persona & Highlights) -->
+            <div class="trend-bottom-details">
+                <div class="persona-card">
+                    <div class="persona-title">Persona Keuangan Kamu:</div>
+                    <div id="wrapped-persona" class="persona-badge">Memuat...</div>
+                    <div id="wrapped-insight" class="persona-desc">Mengalkulasi data keuanganmu...</div>
+                </div>
+
+                <div class="highlight-grid">
+                    <div class="highlight-card">
+                        <span class="highlight-label">🛍️ Paling Sering Jajan Di:</span>
+                        <span id="wrapped-top-exp-cat" class="highlight-value">-</span>
+                        <span id="wrapped-top-exp-val" class="highlight-sub">Rp 0</span>
+                    </div>
+                    <div class="highlight-card">
+                        <span class="highlight-label">💸 Sumber Cuan Terbesar:</span>
+                        <span id="wrapped-top-inc-src" class="highlight-value">-</span>
+                        <span id="wrapped-top-inc-val" class="highlight-sub">Rp 0</span>
                     </div>
                 </div>
             </div>
         </section>
         <!-- AKHIR SEKSI BARU -->
+
+        <!-- SEKSI PORTOFOLIO INVESTASI (UPDATED) -->
+        <section class="section" id="investment-section">
+            <h2>Portofolio Aset & Investasi</h2>
+            <!-- Kartu Total Aset dengan Gradient Emerald -->
+            <div class="card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); border: none; margin-bottom: 20px; color: white;">
+                <h3 style="color: #e6fffa; margin-top: 0;">Total Nilai Aset</h3>
+                <div class="amount" id="total-portfolio-value" style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">Rp 0</div>
+                <!-- Badge Total Keuntungan -->
+                <div id="total-portfolio-profit" style="margin-top: 10px; font-weight: bold; font-size: 1rem; color: #d1fae5;">
+                    Total Profit: Rp 0
+                </div>
+                <div class="note" style="color: #a7f3d0; font-size: 0.85rem; margin-top: 5px;">Snapshot kekayaan (Net Worth) saat ini</div>
+            </div>
+
+            <!-- Tabel Rincian -->
+            <p class="mobile-scroll-hint">Geser tabel untuk melihat semua kolom →</p>
+            <div class="table-wrapper">
+                <table data-table-name="portofolio">
+                    <thead>
+                        <tr>
+                            <th>Nama Aset / Investasi</th>
+                            <th>Kategori</th>
+                            <th>Modal Awal (Rp)</th> <!-- Kolom Baru -->
+                            <th>Nilai Saat Ini (Rp)</th>
+                            <th>Keuntungan (Profit/Loss)</th> <!-- Kolom Baru -->
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="portfolio-table-body">
+                        <!-- Data Portofolio akan di-render di sini -->
+                    </tbody>
+                </table>
+            </div>
+            <button class="add-row-btn" id="add-portfolio-btn">+ Tambah Aset</button>
+        </section>
 
         <!-- SEKSI UNTUK DANA STRATEGIS -->
         <section class="section strategic-fund-section" id="strategic-fund-section" style="display: none;">
@@ -456,7 +581,8 @@
 
         <section class="section">
             <h2>Alokasi Sisa Kas Bulanan</h2>
-            <div class="chart-container">
+            <!-- Container Baru Khusus untuk Grafik Alokasi -->
+            <div class="chart-container-allocation">
                 <canvas id="allocationChart"></canvas>
             </div>
             <div id="allocation-details-container" class="allocation-details"></div>
@@ -556,6 +682,10 @@
                     pemasukan: [],
                     pengeluaran: [],
                     penarikanAset: 0, // Fitur Penarikan Aset
+                    portofolio: [ // Fitur Baru: Portofolio Investasi
+                        { id: 'asset_1', nama: 'Tabungan Emas', kategori: 'Logam Mulia', modalAwal: 0, nominal: 0 },
+                        { id: 'asset_2', nama: 'Reksadana Psr Uang', kategori: 'Reksadana', modalAwal: 0, nominal: 0 }
+                    ],
                     alokasi: [
                         { nama: 'Dana Kuliah', jumlah: 0, target: 0, warna: '#3b82f6', ikon: '🎓', deskripsi: 'Alokasi utama dari sisa kas bulan ini.', strategi: 'Disimpan di rekening terpisah.' },
                         { nama: 'Investasi', jumlah: 0, persentase: 23.8, target: 0, warna: '#10b981', ikon: '📈', deskripsi: 'Alokasikan dana untuk pertumbuhan aset.', strategi: 'Konsisten setiap bulan (DCA).' },
@@ -583,7 +713,7 @@
         }
 
         function parseCurrency(formattedString) {
-            const cleanString = String(formattedString).replace(/[^0-9]/g, '');
+            const cleanString = String(formattedString).replace(/[^0-9-]/g, ''); // Allow minus sign
             return Number(cleanString);
         }
         
@@ -642,7 +772,7 @@
 
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
-            const { dashboard, pemasukan, pengeluaran } = data;
+            const { dashboard, pemasukan, pengeluaran, portofolio } = data;
 
             const [year, month] = monthKey.split('-');
             const date = new Date(year, month - 1);
@@ -676,6 +806,47 @@
                 styles: { fontSize: 10 }
             });
             currentY = doc.autoTable.previous.finalY + 15;
+
+            // --- Tabel Portofolio Investasi (New in PDF with Profit) ---
+            if (portofolio && portofolio.length > 0) {
+                doc.setFontSize(12);
+                doc.text('Portofolio Aset & Investasi', 14, currentY);
+                currentY += 7;
+                
+                const tableBody = [];
+                let totalInvestasi = 0;
+                let totalProfit = 0;
+
+                portofolio.forEach(p => {
+                    const modal = p.modalAwal || 0;
+                    const nilai = p.nominal || 0;
+                    const profit = nilai - modal;
+                    const roi = modal > 0 ? (profit / modal) * 100 : 0;
+                    
+                    totalInvestasi += nilai;
+                    totalProfit += profit;
+
+                    tableBody.push([
+                        p.nama, 
+                        p.kategori, 
+                        formatCurrency(modal), 
+                        formatCurrency(nilai), 
+                        `${formatCurrency(profit)} (${roi.toFixed(1)}%)`
+                    ]);
+                });
+
+                tableBody.push(['TOTAL', '', '', formatCurrency(totalInvestasi), formatCurrency(totalProfit)]);
+
+                doc.autoTable({
+                    startY: currentY,
+                    head: [['Nama Aset', 'Kategori', 'Modal Awal', 'Nilai Saat Ini', 'Keuntungan (Cuan)']],
+                    body: tableBody,
+                    theme: 'striped',
+                    headStyles: { fillColor: [5, 150, 105] },
+                    footStyles: { fillColor: [5, 150, 105], fontStyle: 'bold' }
+                });
+                currentY = doc.autoTable.previous.finalY + 15;
+            }
 
             // --- Tabel Pemasukan ---
             doc.setFontSize(12);
@@ -818,6 +989,9 @@
 
                 data.danaStrategis.komponen = [...autoKomponen, ...pemasukanKomponen, ...manualKomponen];
             }
+            
+            // Ensure portofolio array exists (backward compatibility)
+            if (!data.portofolio) data.portofolio = [];
 
             data.dashboard = {
                 pemasukan: totalPemasukanLiquidBruto,
@@ -867,6 +1041,7 @@
             updateHeadersForMobileView();
             renderAllocationDetails(data.alokasi);
             renderStrategicFund(data);
+            renderPortfolioSection(data); // Fungsi Render Baru
             renderIncomeTable(data.pemasukan, dashboard.pemasukan);
             renderExpenseTable(data.pengeluaran, dashboard.pengeluaran);
             renderRencanaAksi(data.rencanaAksi);
@@ -971,6 +1146,67 @@
                     <div class="summary">Total Dana Siaga: <span class="total-fund">${formatCurrency(totalDanaSiaga)}</span></div>
                 </div>
             `;
+        }
+
+        // --- FUNGSI RENDER PORTOFOLIO (UPDATED WITH PROFIT) ---
+        function renderPortfolioSection(data) {
+            const tableBody = document.getElementById('portfolio-table-body');
+            const totalValueDisplay = document.getElementById('total-portfolio-value');
+            const totalProfitDisplay = document.getElementById('total-portfolio-profit');
+            
+            const portfolioData = data.portofolio || [];
+
+            tableBody.innerHTML = '';
+            
+            let totalValue = 0;
+            let totalProfit = 0;
+
+            portfolioData.forEach((item, index) => {
+                const modal = item.modalAwal || 0;
+                const nominal = item.nominal || 0;
+                const profit = nominal - modal;
+                let profitClass = 'text-neutral';
+                let profitSign = '';
+                
+                if (profit > 0) {
+                    profitClass = 'text-profit';
+                    profitSign = '+';
+                } else if (profit < 0) {
+                    profitClass = 'text-loss';
+                }
+
+                // Hitung ROI
+                const roi = modal > 0 ? (profit / modal) * 100 : 0;
+                
+                totalValue += nominal;
+                totalProfit += profit;
+                
+                const row = `
+                    <tr>
+                        <td contenteditable="true" data-type="portofolio" data-index="${index}" data-field="nama">${item.nama}</td>
+                        <td contenteditable="true" data-type="portofolio" data-index="${index}" data-field="kategori">${item.kategori}</td>
+                        <td><input type="text" class="editable-amount" value="${formatCurrency(modal)}" data-type="portofolio" data-index="${index}" data-field="modalAwal"></td>
+                        <td><input type="text" class="editable-amount" value="${formatCurrency(nominal)}" data-type="portofolio" data-index="${index}" data-field="nominal"></td>
+                        <td class="${profitClass}">${profitSign}${formatCurrency(profit)} (${roi.toFixed(1)}%)</td>
+                        <td><button class="delete-btn" data-type="portofolio" data-index="${index}">&#128465;</button></td>
+                    </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            totalValueDisplay.textContent = formatCurrency(totalValue);
+            
+            let totalProfitClass = 'text-neutral';
+            let totalProfitSign = '';
+            if (totalProfit > 0) { totalProfitClass = 'text-profit'; totalProfitSign = '+'; }
+            else if (totalProfit < 0) { totalProfitClass = 'text-loss'; }
+            
+            // Perbaikan warna text profit agar kontras di background hijau gelap
+            let profitColorStyle = "";
+            if (totalProfit > 0) profitColorStyle = "color: #6ee7b7;"; // Hijau terang
+            else if (totalProfit < 0) profitColorStyle = "color: #fca5a5;"; // Merah terang
+            else profitColorStyle = "color: #d1fae5;"; // Netral terang
+
+            totalProfitDisplay.innerHTML = `Total Profit: <span style="${profitColorStyle}">${totalProfitSign}${formatCurrency(totalProfit)}</span>`;
         }
 
         // --- WRAPPED / TREND ANALYSIS LOGIC (UPDATED) ---
@@ -1078,6 +1314,50 @@
             };
         }
 
+        // Plugin untuk Text di Tengah Doughnut
+        const centerTextPlugin = {
+            id: 'centerText',
+            beforeDraw: function(chart) {
+                if (chart.config.type !== 'doughnut') return;
+                
+                // FIX: Check if center text config exists to prevent error on other charts
+                if (!chart.config.options.elements || !chart.config.options.elements.center) return;
+
+                var width = chart.width,
+                    height = chart.height,
+                    ctx = chart.ctx;
+
+                ctx.restore();
+                
+                // Font sizes
+                var fontSizeMain = (height / 160).toFixed(2);
+                var fontSizeSub = (height / 300).toFixed(2);
+
+                // Main Text (Percentage)
+                ctx.font = "bold " + fontSizeMain + "em sans-serif";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#fff";
+
+                var text = chart.config.options.elements.center.text;
+                var textX = Math.round((width - ctx.measureText(text).width) / 2);
+                var textY = height / 2 - (height * 0.05); // Move up slightly
+
+                ctx.fillText(text, textX, textY);
+                
+                // Subtext (Label)
+                var subtext = "Pengeluaran";
+                ctx.font = "normal " + fontSizeSub + "em sans-serif";
+                ctx.fillStyle = "#9ca3af";
+                var subtextX = Math.round((width - ctx.measureText(subtext).width) / 2);
+                var subtextY = height / 2 + (height * 0.08); // Move down slightly
+
+                ctx.fillText(subtext, subtextX, subtextY);
+
+                ctx.save();
+            }
+        };
+        Chart.register(centerTextPlugin);
+
         function renderTrendAnalysis() {
             const startKey = document.getElementById('trend-start').value;
             const endKey = document.getElementById('trend-end').value;
@@ -1088,7 +1368,7 @@
             
             // Update Text Stats
             document.getElementById('wrapped-total-inc').textContent = formatCurrency(trendData.totalIncome);
-            document.getElementById('wrapped-total-exp').textContent = `${formatCurrency(trendData.totalExpense)} -`;
+            document.getElementById('wrapped-total-exp').textContent = `- ${formatCurrency(trendData.totalExpense)}`;
             document.getElementById('wrapped-net-flow').textContent = formatCurrency(trendData.netFlow);
             
             // Update Highlights
@@ -1098,71 +1378,105 @@
             document.getElementById('wrapped-top-inc-src').textContent = trendData.topSource.name;
             document.getElementById('wrapped-top-inc-val').textContent = formatCurrency(trendData.topSource.value);
 
-            // Tentukan Persona / Insight
+            // Tentukan Persona & Data Chart
             const personaBadge = document.getElementById('wrapped-persona');
             const insightDesc = document.getElementById('wrapped-insight');
             
-            // Logika Sederhana Persona
-            let chartLabels = [], chartData = [], chartColors = [];
+            let chartLabels = [], chartData = [], backgroundColors = [];
+            
+            // Hitung Persentase Pengeluaran untuk Teks Tengah
+            let expensePercentage = 0;
+            if (trendData.totalIncome > 0) {
+                expensePercentage = Math.round((trendData.totalExpense / trendData.totalIncome) * 100);
+            } else if (trendData.totalExpense > 0) {
+                expensePercentage = 100; // Jika tidak ada income tapi ada expense
+            }
+
+            // Fungsi Membuat Gradient
+            const createGradient = (ctx, colorStart, colorEnd) => {
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, colorStart);
+                gradient.addColorStop(1, colorEnd);
+                return gradient;
+            };
+
+            const ctx = trendCtx; // Konteks canvas
 
             if (trendData.totalIncome === 0 && trendData.totalExpense === 0) {
                  personaBadge.textContent = "👻 Hantu Keuangan";
                  insightDesc.textContent = "Belum ada data transaksi di periode ini. Yuk mulai catat!";
-                 chartLabels = ['Kosong']; chartData = [1]; chartColors = ['#4b5563'];
+                 chartLabels = ['Kosong']; chartData = [1]; 
+                 backgroundColors = ['#4b5563'];
+                 expensePercentage = 0;
             } else if (trendData.netFlow > 0) {
                 // Positif
                 const savingRate = (trendData.netFlow / trendData.totalIncome) * 100;
                 
                 if (savingRate > 40) {
                     personaBadge.textContent = "👑 Sultan Masa Depan";
-                    insightDesc.textContent = `Luar biasa! Kamu menyimpan ${savingRate.toFixed(0)}% dari pemasukanmu. Asetmu tumbuh subur!`;
+                    insightDesc.textContent = `Luar biasa! Kamu menyimpan ${savingRate.toFixed(0)}% dari pemasukanmu.`;
                 } else {
                     personaBadge.textContent = "🐿️ Si Jago Nabung";
-                    insightDesc.textContent = `Kamu konsisten menabung ${savingRate.toFixed(0)}% dari pemasukan. Pertahankan kebiasaan baik ini.`;
+                    insightDesc.textContent = `Kamu konsisten menabung ${savingRate.toFixed(0)}% dari pemasukan.`;
                 }
 
-                chartLabels = ['Terpakai (Jajan/Tagihan)', 'Disimpan (Aset)'];
+                chartLabels = ['Terpakai', 'Disimpan'];
                 chartData = [trendData.totalExpense, trendData.netFlow];
-                chartColors = ['#ef4444', '#10b981'];
+                // Gradient Merah (Expense) & Hijau (Saved)
+                backgroundColors = [
+                    createGradient(ctx, '#ef4444', '#b91c1c'), 
+                    createGradient(ctx, '#10b981', '#059669')
+                ];
 
             } else if (trendData.netFlow < 0) {
                 // Negatif
                 personaBadge.textContent = "📉 Butuh Evaluasi";
-                insightDesc.textContent = `Asetmu berkurang ${formatCurrency(Math.abs(trendData.netFlow))}. Pengeluaran atau penarikan melebihi pemasukan bulan ini.`;
+                insightDesc.textContent = `Asetmu berkurang ${formatCurrency(Math.abs(trendData.netFlow))}.`;
                 
-                chartLabels = ['Pemasukan (Habis)', 'Defisit (Ambil Aset)'];
+                chartLabels = ['Pemasukan (Habis)', 'Defisit'];
                 chartData = [trendData.totalIncome, Math.abs(trendData.netFlow)];
-                chartColors = ['#3b82f6', '#ef4444'];
+                // Gradient Biru (Income) & Merah (Deficit)
+                backgroundColors = [
+                    createGradient(ctx, '#3b82f6', '#2563eb'), 
+                    createGradient(ctx, '#ef4444', '#b91c1c')
+                ];
             } else {
                 // Impas
                 personaBadge.textContent = "⚖️ Pejuang Stabil";
-                insightDesc.textContent = "Pemasukan pas-pasan menutup pengeluaran. Tidak ada aset bertambah, tapi tidak hutang.";
+                insightDesc.textContent = "Pemasukan pas-pasan menutup pengeluaran.";
                 
                 chartLabels = ['Terpakai', 'Sisa'];
                 chartData = [trendData.totalExpense, 0];
-                chartColors = ['#ef4444', '#10b981'];
+                backgroundColors = [createGradient(ctx, '#ef4444', '#b91c1c'), '#10b981'];
             }
 
-            // Update Chart (PIE)
+            // Update Chart (Doughnut)
             if (trendChart) trendChart.destroy();
             trendChart = new Chart(trendCtx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: chartLabels,
                     datasets: [{
                         data: chartData,
-                        backgroundColor: chartColors,
+                        backgroundColor: backgroundColors,
                         borderColor: '#1f2937',
-                        borderWidth: 2
+                        borderWidth: 2,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    cutout: '75%', // Lubang tengah lebih besar untuk teks
+                    elements: {
+                        center: {
+                            text: expensePercentage + '%'
+                        }
+                    },
                     plugins: {
                         legend: { 
                             position: 'bottom', 
-                            labels: { color: '#9ca3af', padding: 20, font: { size: 11 } } 
+                            labels: { color: '#9ca3af', padding: 20, font: { size: 12 } } 
                         },
                         tooltip: { 
                             callbacks: { 
@@ -1287,7 +1601,12 @@
                     labels: alokasiData.map(item => item.nama),
                     datasets: [{ data: alokasiData.map(item => item.jumlah), backgroundColor: alokasiData.map(item => item.warna), borderColor: '#1f2937', borderWidth: 4 }]
                 },
-                options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.parsed)}` } } } }
+                options: { 
+                    responsive: true, 
+                    cutout: '70%', 
+                    maintainAspectRatio: false, // Ditambahkan agar patuh pada ukuran container
+                    plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: (c) => `${c.label}: ${formatCurrency(c.parsed)}` } } } 
+                }
             });
         }
 
@@ -1323,6 +1642,21 @@
 
             const monthKey = availableMonths[currentMonthIndex];
             const data = financeData[monthKey];
+
+            // Add handler for Portfolio "Add" button
+            if (target.id === 'add-portfolio-btn') {
+                if (!data.portofolio) data.portofolio = [];
+                data.portofolio.push({
+                    id: 'asset_' + Date.now(),
+                    nama: 'Aset Baru',
+                    kategori: 'Umum',
+                    modalAwal: 0, // Inisialisasi modal awal
+                    nominal: 0
+                });
+                saveDataToLocalStorage();
+                recalculateAndRender();
+                return;
+            }
 
             if (target.id === 'add-strategic-component-btn') {
                 if (data.danaStrategis && data.danaStrategis.komponen) {
@@ -1370,6 +1704,10 @@
                     const id = target.dataset.id;
                     const componentToUpdate = data.danaStrategis.komponen.find(c => c.id === id);
                     if(componentToUpdate) componentToUpdate[field] = value;
+                } else if (dataType === 'portofolio') {
+                    // Update Portfolio
+                    const index = parseInt(target.dataset.index, 10);
+                    data.portofolio[index][field] = value;
                 } else {
                     const index = parseInt(target.dataset.index, 10);
                     data[dataType][index][field] = value;
@@ -1401,6 +1739,10 @@
                     if (pointIndex !== undefined) data.rencanaAksi[index].poin[parseInt(pointIndex, 10)] = value;
                     else if (field === 'judul') data.rencanaAksi[index].judul = value;
                     needsSave = true;
+                } else if (dataType === 'portofolio') {
+                    const index = parseInt(target.dataset.index, 10);
+                    data.portofolio[index][field] = value;
+                    needsSave = true;
                 } else { 
                     const index = parseInt(target.dataset.index, 10);
                     data[dataType][index][field] = value;
@@ -1412,6 +1754,9 @@
                         if (dataType === 'danaStrategisKomponen') {
                             const idToDelete = target.dataset.id;
                             data.danaStrategis.komponen = data.danaStrategis.komponen.filter(c => c.id !== idToDelete);
+                        } else if (dataType === 'portofolio') {
+                            const index = parseInt(target.dataset.index, 10);
+                            data.portofolio.splice(index, 1);
                         } else {
                              const index = parseInt(target.dataset.index, 10);
                              data[dataType].splice(index, 1);
